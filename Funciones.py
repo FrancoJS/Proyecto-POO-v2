@@ -69,15 +69,45 @@ class Funciones:
                     print("El apellido del empleado no puede estar vacio")
                     system("pause")
                     continue
-                ape_materno = input("Ingrese el apellido materno del empleado").strip()
+                ape_materno = input("Ingrese el apellido materno del empleado: ").strip()
                 if not ape_materno:
                     print("El apellido materno del empleado no puede estar vacío")
                     system("pause")
                     continue
-                
-            except:
-                pass
-                
+                telefono = int(input("Ingrese número teléfono del empleado: "))
+                if not telefono:
+                    print("El número de teléfono del empleado no puede estar vacío")
+                    system("pause")
+                    continue
+                correo = input("Ingrse correo del empleado: ")
+                if not correo:
+                    print("El correo del empleado no puede estar vacío")
+                    system("pause")
+                    continue
+                experiencia = int(input("Ingrese la experiencia del empleado: "))
+                if experiencia < 0:
+                    print("La experiencia del empleado no puede ser negativa")
+                    system("pause")
+                if not experiencia:
+                    print("La experiencia del empleado no puede estar vacía")
+                    system("pause")
+                    continue
+                inicio_contrato = input("Ingrese la fecha de inicio de contrato del empleado (YYYY-MM-DD)")
+                if not inicio_contrato:
+                    print("La fecha de inicio de contrato del empleado no puede estar vacía")
+                    system("pause")
+                    continue
+                salario = int(input("Ingrese salario del empleado: "))
+                if salario <0:
+                    print("El salario del empleado no puede ser negativo")
+                    system("pause")
+                elif not salario:
+                    print("El salario del empleado no puede estar vacío")
+                    system("pause")
+                    continue
+            except ValueError:
+                print("Uno de los valores ingresados en crear empleado no es valido. Reintentar")
+                system("pause")
             
         
     def listarEmpleado(self):
