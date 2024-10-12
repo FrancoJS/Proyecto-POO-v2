@@ -72,12 +72,12 @@ class Funciones:
                 ape_materno = input("Ingrese el apellido materno del empleado").strip()
                 if not ape_materno:
                     print("El apellido materno del empleado no puede estar vacío")
+                    system("pause")
+                    continue
                 
             except:
                 pass
                 
-            
-        
             
         
     def listarEmpleado(self):
@@ -112,8 +112,7 @@ class Funciones:
             print("Debe ingresar la fecha en el formato (YYYY-MM-DD)")
             
     def listarSucursales(self):
-        sucursal_controller = SucursalController()
-        sucursal_controller.listarSucursales()
+        
         pass
         
         

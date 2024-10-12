@@ -13,7 +13,7 @@ class Empleado (Persona):
         self.s_id = s_id
         
         
-e = Empleado()
+
 
 
 
