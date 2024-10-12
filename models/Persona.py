@@ -1,5 +1,5 @@
 class Persona:
-    
+
     def __init__(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str):
         self.rut = rut
         self.nombres = nombres
@@ -8,5 +8,12 @@ class Persona:
         self.telefono = telefono
         self.correo = correo
         
+    
+    def getRut():
+        pass
+    
+    def setRut():
+        pass
+
 
 

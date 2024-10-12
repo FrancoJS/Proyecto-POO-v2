@@ -6,3 +6,8 @@ class Sucursal:
         self.nombre = nombre
         self.direccion = direccion
         self.fecha_constitucion = fecha_constitucion
+
+
+
+
+        
