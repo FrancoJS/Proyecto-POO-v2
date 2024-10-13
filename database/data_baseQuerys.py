@@ -7,7 +7,7 @@ class Data_Querys:
     def sql_select(self):
         try:
             query = "SELECT * FROM EMPLEADOS"
-            result = self.__dao.cursor.execute(query)
+            self.__dao.cursor.execute(query)
             result = self.__dao.cursor.fetchall()
             return result
         except Exception as e:  

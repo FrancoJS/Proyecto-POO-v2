@@ -51,8 +51,9 @@ class Funciones:
                 else:
                     print("Opcion no valida, Reintentar.")
                     system("pause")
-            except ValueError:
+            except Exception as e:
                 print("Debe ingresar un valor válido dentro de las opciones empleados.")
+                print(e)
                 system("pause")
 
                 
@@ -65,16 +66,12 @@ class Funciones:
             try:
                 system("cls")
                 print("Crear empleado\n")
-                rut = input("Ingrese el RUT del empleado: ").strip() 
-                nombres = input("Ingrese el nombre del empleado: ").strip()
-                ape_paterno = input("Ingrese el apellido del empleado: ").strip()
-                ape_materno = input("Ingrese el apellido materno del empleado: ").strip()
-                telefono = int(input("Ingrese número teléfono del empleado: "))
-                correo = input("Ingrese correo del empleado: ").strip()
+                rut, nombres, ape_paterno, ape_materno, telefono, correo = DatosPersona().obtenerDatos()
                 experiencia = int(input("Ingrese la experiencia del empleado: "))
                 inicio_contrato = input("Ingrese la fecha de inicio de contrato del empleado (YYYY-MM-DD): ")
                 salario = int(input("Ingrese salario del empleado: "))
-                s_id = 1
+                self.listarSucursales()
+                s_id = int(input("Ingrese el ID de la sucursal para asignar al empleado: "))
                 empleadoController = Empleado_Controller()
                 empleadoController.crearEmpleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
                 break
@@ -94,10 +91,11 @@ class Funciones:
         else:
             system("cls")
             print("Listar Usuarios")
-            tabla = BeautifulTable()
-            tabla.columns.header = ["ID EMPLEADO","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
+            tabla = BeautifulTable(maxwidth=120)
+            tabla.columns.header = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
             for empleado in empleados:
-                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9]])
+                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9], empleado[10]])
+                
             print(tabla)
             system("pause")
         
