@@ -18,3 +18,14 @@ class Empleado_Controller:
             raise Exception("Ocurrió un error al ingresar los datos.")
         finally:
             self.__dao.cursor.close()
+
+    def listarEmpleados(self):
+        try:
+            sql = "SELECT * FROM EMPLEADOS"
+            self.__dao.cursor.execute(sql)
+            result = self.__dao.cursor.fetchall()
+            return result
+        except Exception as e:  
+            print(f"Ocurrió un error al buscar los datos: {e}")   
+        finally:
+            self.__dao.desconectar()

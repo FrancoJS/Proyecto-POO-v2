@@ -81,8 +81,8 @@ class Funciones:
             
         
     def listarEmpleado(self):
-        datos = Data_Querys()
-        empleados = datos.sql_select()
+        datos = Empleado_Controller()
+        empleados = datos.listarEmpleados()
         if not empleados:
             system("cls")
             print("No se encontraron empleados registrados")
@@ -94,7 +94,7 @@ class Funciones:
             tabla = BeautifulTable()
             tabla.columns.header = ["ID EMPLEADO","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
             for empleado in empleados:
-                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9]])
+                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9], empleado[10]])
             print(tabla)
             system("pause")
         
