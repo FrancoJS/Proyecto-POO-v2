@@ -1,5 +1,7 @@
 from controllers.sucursal_controller import SucursalController
+from controllers.empleado_controller import Empleado_Controller
 from utils.obtener_datos_persona import DatosPersona
+from database.data_baseQuerys import Data_Querys
 from colorama import Fore, Style, init
 init(autoreset=True)
 from models.Sucursal import Sucursal
@@ -51,67 +53,49 @@ class Funciones:
             except ValueError:
                 print("Debe ingresar un valor válido dentro de las opciones empleados.")
                 system("pause")
+
                 
-    #rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str,
-                #experiencia:#int, inicio_contrato:date, salario:int, s_id:int):
+                
+#------------------------------------------BUSCAR MEJOR MANERA PARA MEJORAR FLUJO DE INGRESO DE DATOS--------------------
+
+#----------------------------------------- VERIFICAR FORMATO FECHA Y VERIFICAR S_ID
     def crearEmpleado(self):
         while True:
             try:
                 system("cls")
                 print("Crear empleado\n")
+                rut = input("Ingrese el RUT del empleado: ").strip() 
                 nombres = input("Ingrese el nombre del empleado: ").strip()
-                if not nombres:
-                    print("El nombre del empleado no puede estar vacio ni contener numeros")
-                    system("pause")
-                    continue
                 ape_paterno = input("Ingrese el apellido del empleado: ").strip()
-                if not ape_paterno:
-                    print("El apellido del empleado no puede estar vacio")
-                    system("pause")
-                    continue
                 ape_materno = input("Ingrese el apellido materno del empleado: ").strip()
-                if not ape_materno:
-                    print("El apellido materno del empleado no puede estar vacío")
-                    system("pause")
-                    continue
                 telefono = int(input("Ingrese número teléfono del empleado: "))
-                if not telefono:
-                    print("El número de teléfono del empleado no puede estar vacío")
-                    system("pause")
-                    continue
-                correo = input("Ingrse correo del empleado: ")
-                if not correo:
-                    print("El correo del empleado no puede estar vacío")
-                    system("pause")
-                    continue
+                correo = input("Ingrese correo del empleado: ").strip()
                 experiencia = int(input("Ingrese la experiencia del empleado: "))
-                if experiencia < 0:
-                    print("La experiencia del empleado no puede ser negativa")
-                    system("pause")
-                if not experiencia:
-                    print("La experiencia del empleado no puede estar vacía")
-                    system("pause")
-                    continue
-                inicio_contrato = input("Ingrese la fecha de inicio de contrato del empleado (YYYY-MM-DD)")
-                if not inicio_contrato:
-                    print("La fecha de inicio de contrato del empleado no puede estar vacía")
-                    system("pause")
-                    continue
+                inicio_contrato = input("Ingrese la fecha de inicio de contrato del empleado (YYYY-MM-DD): ")
                 salario = int(input("Ingrese salario del empleado: "))
-                if salario <0:
-                    print("El salario del empleado no puede ser negativo")
-                    system("pause")
-                elif not salario:
-                    print("El salario del empleado no puede estar vacío")
-                    system("pause")
-                    continue
+                s_id = 1
+                empleadoController = Empleado_Controller()
+                empleadoController.crearEmpleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
+                break
             except ValueError:
-                print("Uno de los valores ingresados en crear empleado no es valido. Reintentar")
+                print("Uno de los valores ingresados no es válido. Reintentar.")
                 system("pause")
             
         
     def listarEmpleado(self):
-        pass
+        datos = Data_Querys()
+        empleados = datos.sql_select()
+        if not empleados:
+            system("cls")
+            print("No se encontraron empleados registrados")
+            system("pause")
+            self.menuMesaAyuda()
+        else:
+            pass
+                
+        
+        
+        
     
     def __gestionSucursales(self):
         system('cls')
