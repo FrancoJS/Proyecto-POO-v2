@@ -94,10 +94,12 @@ class Funciones:
         else:
             system("cls")
             print("Listar Usuarios")
-            
-            pass
-                
-        
+            tabla = BeautifulTable()
+            tabla.columns.header = ["ID EMPLEADO","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
+            for empleado in empleados:
+                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9]])
+            print(tabla)
+            system("pause")
         
         
     
