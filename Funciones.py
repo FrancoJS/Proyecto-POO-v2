@@ -8,6 +8,7 @@ from models.Sucursal import Sucursal
 from database.dao import DAO
 from os import system
 from datetime import datetime
+from beautifultable import BeautifulTable
 
 class Funciones:
     def __init__(self):
@@ -91,6 +92,9 @@ class Funciones:
             system("pause")
             self.menuMesaAyuda()
         else:
+            system("cls")
+            print("Listar Usuarios")
+            
             pass
                 
         
