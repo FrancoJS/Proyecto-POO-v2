@@ -95,9 +95,10 @@ class Funciones:
             system("cls")
             print("Listar Usuarios")
             tabla = BeautifulTable()
-            tabla.columns.header = ["ID EMPLEADO","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
+            tabla.columns.auto = [50,30,50]
+            tabla.columns.header = ["ID EMPLEADO"]
             for empleado in empleados:
-                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9]])
+                tabla.rows.append([empleado[0]])
             print(tabla)
             system("pause")
         
@@ -139,7 +140,6 @@ class Funciones:
             print(sucursal)
             sucursal[3]
             table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
-            
         print(table)
         
         
