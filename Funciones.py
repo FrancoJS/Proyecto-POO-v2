@@ -98,9 +98,6 @@ class Funciones:
             pass
                 
         
-        
-        
-    
     def __gestionSucursales(self):
         system('cls')
         print("MENU SUCURSALES")
@@ -130,8 +127,15 @@ class Funciones:
             print("Debe ingresar la fecha en el formato (YYYY-MM-DD)")
             
     def listarSucursales(self):
-        
-        pass
+        datos_sucursal = SucursalController().listarSucursales()
+        table = BeautifulTable()
+        table.column_headers = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
+        for sucursal in datos_sucursal:
+            print(sucursal)
+            sucursal[3]
+            table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
+            
+        print(table)
         
         
             
