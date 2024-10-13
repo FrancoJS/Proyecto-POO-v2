@@ -21,7 +21,15 @@ class SucursalController:
             self.__dao.desconectar()
             
     def listarSucursales(self):
-        pass
+        try:
+            sql = "SELECT * FROM SUCURSALES"
+            self.__dao.cursor.execute(sql)
+            response = self.__dao.cursor.fetchall()
+            return response
+        except Exception as e:
+            print(e)
+        finally:
+            self.__dao.desconectar()
     
 
         
