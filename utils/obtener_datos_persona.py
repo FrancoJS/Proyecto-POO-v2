@@ -5,7 +5,7 @@ from colorama import Fore
 class DatosPersona:
     
     def obtenerDatos(self):
-        rut = self.obtenerRut();
+        rut = self.__obtenerRut();
         nombres = self.__obtenerNombre()
         apellido_p = self.__obtenerApellido("PATERNO")
         apellido_m = self.__obtenerApellido("MATERNO")
@@ -14,7 +14,7 @@ class DatosPersona:
         return rut, nombres, apellido_p, apellido_m, telefono, correo
         
     @staticmethod
-    def obtenerRut() -> str:
+    def __obtenerRut() -> str:
         while True:
             print(Fore.GREEN + "Si el digito verificador de su rut es 'K' reemplacelo con 0")
             rut = input("RUT: ").strip()
