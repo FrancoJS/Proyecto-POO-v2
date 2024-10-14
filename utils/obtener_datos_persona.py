@@ -1,3 +1,4 @@
+from datetime import datetime
 from os import system
 import re
 from colorama import Fore
@@ -5,13 +6,16 @@ from colorama import Fore
 class DatosPersona:
     
     def obtenerDatos(self):
-        rut = self.__obtenerRut();
+        rut = self.__obtenerRut()
         nombres = self.__obtenerNombre()
         apellido_p = self.__obtenerApellido("PATERNO")
         apellido_m = self.__obtenerApellido("MATERNO")
         telefono = self.__obtenerTelefono()
         correo = self.__obtenerCorreo()
-        return rut, nombres, apellido_p, apellido_m, telefono, correo
+        experiencia = self.__obtenerExperiencia()
+        inicio_contrato = self.__obtenerFechaContrato()
+        salario = self.__obtenerSalario()
+        return rut, nombres, apellido_p, apellido_m, telefono, correo, experiencia, inicio_contrato, salario
         
     @staticmethod
     def __obtenerRut() -> str:
@@ -41,7 +45,7 @@ class DatosPersona:
         while True:   
             nombres = input("NOMBRES: ").strip()
             if not re.match("^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$", nombres):
-                print("Los nombres solo deben contener carateres válidos.")
+                print("Los nombres solo deben contener caracteres válidos.")
                 continue
             
             elif len(nombres) < 1 or len(nombres) > 50:
@@ -53,7 +57,6 @@ class DatosPersona:
     @staticmethod
     def __obtenerApellido(tipo:str) -> str:
         while True:
-                               
             apellido = input(f"APELLIDO {tipo}: ").strip()
             if not apellido.isalpha():
                 print(f"El apellido no debe contener caracteres especiales ni espacios.")
@@ -86,7 +89,7 @@ class DatosPersona:
             correo = input("CORREO: ")
             
             if len(correo) < 1 or len(correo) > 50:
-                print("El correo debe tener entre 1 y 50 caracteres")
+                print("El correo debe tener entre 1 y 50 caracteres.")
                 continue
             
             if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$", correo):
@@ -95,3 +98,36 @@ class DatosPersona:
             
             return correo
     
+    @staticmethod
+    def __obtenerExperiencia() -> int:
+        while True:
+            try:
+                experiencia = int(input("Ingrese la experiencia del empleado (en años): "))
+                if experiencia < 0 or experiencia > 50:
+                    print("La experiencia debe ser un valor entre 0 y 50 años.")
+                    continue
+                return experiencia
+            except ValueError:
+                print("Debe ingresar un número válido para la experiencia.")
+    
+    @staticmethod
+    def __obtenerFechaContrato() -> str:
+        while True:
+            fecha_contrato = input("Ingrese la fecha de inicio de contrato del empleado (YYYY-MM-DD): ").strip()
+            try:
+                datetime.strptime(fecha_contrato, "%Y-%m-%d")
+                return fecha_contrato
+            except ValueError:
+                print("Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
+    
+    @staticmethod
+    def __obtenerSalario() -> int:
+        while True:
+            try:
+                salario = int(input("Ingrese el salario del empleado: "))
+                if salario < 0:
+                    print("El salario no puede ser negativo.")
+                    continue
+                return salario
+            except ValueError:
+                print("Debe ingresar un número válido para el salario.")

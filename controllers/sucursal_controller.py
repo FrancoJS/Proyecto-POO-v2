@@ -6,7 +6,7 @@ class SucursalController:
     def __init__(self):
         self.__dao = DAO()
     
-    def crearNuevaSucursal(self,nombre:str, direccion:str, fecha_constitucion):
+    def crearSucursal(self,nombre:str, direccion:str, fecha_constitucion):
         try:
             sucursal = Sucursal(nombre, direccion, fecha_constitucion)
             sql = "INSERT INTO SUCURSALES (nombre, direccion, fecha_const) values (%s, %s, %s)"
