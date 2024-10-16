@@ -12,7 +12,7 @@ class DatosSucursal:
     @staticmethod
     def __obtenerNombreSucursal() -> str:
         while True:
-            nombre = input("Ingrese el nombre de la sucursal: ").strip()
+            nombre = input("NOMBRE SUCURSAL: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s]+$", nombre):
                 print("El nombre de la sucursal solo debe contener caracteres alfanuméricos y espacios.")
                 continue
@@ -24,7 +24,7 @@ class DatosSucursal:
     @staticmethod
     def __obtenerDireccion() -> str:
         while True:
-            direccion = input("Ingrese la dirección de la sucursal: ").strip()
+            direccion = input("DIRECCION SUCURSAL: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s#.,-]+$", direccion):
                 print("La dirección contiene caracteres no permitidos.")
                 continue
@@ -36,9 +36,9 @@ class DatosSucursal:
     @staticmethod
     def __obtenerFechaConstitucion() -> str:
         while True:
-            fecha_constitucion = input("Ingrese la fecha de constitución (YYYY-MM-DD): ").strip()
+            fecha_constitucion = input("FECHA CONSTITUCION (YYYY-MM-DD): ").strip()
             try:
                 fecha = datetime.strptime(fecha_constitucion, "%Y-%m-%d")
-                return fecha_constitucion
+                return fecha
             except ValueError:
                 print("Debe ingresar una fecha válida en el formato YYYY-MM-DD.")

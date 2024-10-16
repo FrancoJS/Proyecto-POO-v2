@@ -8,12 +8,7 @@ class Persona:
         self.telefono = telefono
         self.correo = correo
         
-    
-    def getRut():
-        pass
-    
-    def setRut():
-        pass
+
 
 
 

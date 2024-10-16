@@ -15,11 +15,11 @@ class DAO:
             )
 
             self.cursor = self.connection.cursor()
-            print("Conexion establecida correctamente")
+            # print("Conexion establecida correctamente")
         except:
             print("Error al conectar a la base de datos")
         
     def desconectar(self):
         self.connection.close()
-        print("Desconectado")
+        # print("Desconectado")
         

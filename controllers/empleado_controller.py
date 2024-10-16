@@ -1,6 +1,8 @@
 from models.Empleado import Empleado
 from database.dao import DAO
 from datetime import date
+from colorama import Fore, Style, init
+init(autoreset=True)
 
 class Empleado_Controller:
     def __init__(self):
@@ -13,9 +15,8 @@ class Empleado_Controller:
             values = (empleado.rut, empleado.nombres, empleado.ape_paterno, empleado.ape_materno, empleado.telefono, empleado.correo, empleado.experiencia, empleado.inicio_contrato, empleado.salario, empleado.s_id)
             self.__dao.cursor.execute(sql, values)
             self.__dao.connection.commit()
-        except Exception as e:  
-            print(f"Ocurrió un error al ingresar los datos: {e}")  # 
-            raise Exception("Ocurrió un error al ingresar los datos.")
+        except:  
+            raise Exception(Fore.RED + "¡Ocurrió un error al ingresar al empleado en la base de datos!")
         finally:
             self.__dao.cursor.close()
 
