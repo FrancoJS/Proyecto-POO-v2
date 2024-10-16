@@ -3,7 +3,7 @@ from controllers.empleado_controller import Empleado_Controller
 from utils.obtener_datos_persona import DatosPersona
 from utils.obtener_datos_sucursal import DatosSucursal
 from utils.obtener_datos_empleado import DatosEmpleado
-from colorama import Fore, Style, init
+from colorama import Fore,init
 init(autoreset=True)
 from os import system
 from beautifultable import BeautifulTable
@@ -16,7 +16,7 @@ class Funciones:
     def menuMesaAyuda(self):
         try:
             system("cls")
-            print(Fore.GREEN + "---BIENVENIDO AL MENU DE MESA DE AYUDA---")
+            print(Fore.CYAN + "---BIENVENIDO AL MENU DE MESA DE AYUDA---")
             print("1. Gestion de Empleados")
             print("2. Gestion de Sucursales")
             print("3. Salir")
@@ -52,11 +52,11 @@ class Funciones:
             elif select == 3:
                 self.menuMesaAyuda()
             else:
-                print("Debe seleccionar una de las opciones disponibles, Reintentar.")
+                print(Fore.RED + "Debe seleccionar una de las opciones disponibles, Reintentar.")
                 system("pause")
                 return self.__gestionEmpleados()
          except ValueError:
-            print("Debe ingresar un valor válido dentro de las opciones empleados.")
+            print(Fore.RED + "Debe ingresar un valor válido dentro de las opciones empleados.")
             system("pause")
             return self.__gestionEmpleados()
 
@@ -73,19 +73,25 @@ class Funciones:
             self.listarSucursales(True)
             while True:
                 try:
-                    s_id = int(input(Fore.CYAN + "Ingrese el ID de la sucursal para asignar al empleado: "))
+                    s_id = int(input(Fore.CYAN + "INGRESE ID SUCURSAL DE EMPLEADO: "))
                     if s_id:
                         break
                 except:
                     print("ID de Sucursal es necesaria")
             empleadoController = Empleado_Controller()
             empleadoController.crearEmpleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
+            print(Fore.GREEN + "¡EMPLEADO CREADO EXITOSAMENTE!")
+            select = input("Desea agregar otro empleado?\n Y. SI    N. NO: ").upper()
+            if select == 'Y':
+                return self.crearEmpleado()
+            else:
+                self.menuMesaAyuda()
         except ValueError:
-            print("Uno de los valores ingresados no es válido. Reintentar.")
+            print(Fore.RED + "Uno de los valores ingresados no es válido. Reintentar.")
             system("pause")
             self.menuMesaAyuda()
         except Exception as e:
-            print(e)
+            print(e, Fore.RED + "Intente nuevamente")
             system("pause")
             self.menuMesaAyuda()
             
@@ -101,10 +107,10 @@ class Funciones:
         
         system("cls")
         print(Fore.BLUE + "LISTAR EMPLEADOS")
-        tabla = BeautifulTable(maxwidth=120)
+        tabla = BeautifulTable(maxwidth=150)
         tabla.columns.header = ["ID EMPLEADO","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
         for empleado in empleados:
-            tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8], empleado[9], empleado[10]])
+            tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8].strftime("%Y-%m-%d"), empleado[9], empleado[10]])
         print(tabla)
         system("pause")
         self.menuMesaAyuda()
@@ -113,8 +119,8 @@ class Funciones:
     def __gestionSucursales(self):
         try:
             system('cls')
-            print(Fore.GREEN + "---MENU SUCURSALES---")
-            print("1. Crear sucursal")
+            print(Fore.CYAN + "---MENU SUCURSALES---")
+            print("1. Ingresar nueva sucursal")
             print("2. Listar sucursales")
             print("3. Volver")
             opcion = int(input("Ingrese opcion: "))
@@ -137,11 +143,11 @@ class Funciones:
     def crearSucursal(self):
         try:
             system("cls")
-            print(Fore.GREEN + "---CREAR SUCURSAL---")
+            print(Fore.CYAN + "---CREAR SUCURSAL---")
             nombre, direccion, fecha_constitucion = DatosSucursal().obtenerDatosSucursal()
             sucursal_controller = SucursalController()
             id_sucursal = sucursal_controller.crearSucursal(nombre,direccion,fecha_constitucion)
-            print(f"Sucursal creada exitosamente con ID: {id_sucursal}")
+            print(Fore.GREEN + f"SUCURSAL CREADA CON ID: {id_sucursal}")
             select = input("Desea agregar otra sucursal?\n Y. SI    N. NO: ").upper()
             if select == 'Y':
                 return self.crearSucursal()
@@ -162,8 +168,8 @@ class Funciones:
         for sucursal in datos_sucursal:
             table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
         print(table)
-        system("pause")
         if not e:
+            system("pause")
             self.menuMesaAyuda()
         
     

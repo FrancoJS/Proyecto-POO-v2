@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+from colorama import Fore
 
 class DatosEmpleado: 
     
@@ -16,11 +17,11 @@ class DatosEmpleado:
             try:
                 experiencia = int(input("EXPERIENCIA (en años): "))
                 if experiencia < 0 or experiencia > 50:
-                    print("La experiencia debe ser un valor entre 0 y 50 años.")
+                    print(Fore.RED + "La experiencia debe ser un valor entre 0 y 50 años.")
                     continue
                 return experiencia
             except ValueError:
-                print("Debe ingresar un número válido para la experiencia.")
+                print(Fore.RED + "Debe ingresar un número válido para la experiencia.")
     
     @staticmethod
     def __obtenerFechaContrato() -> str:
@@ -30,7 +31,7 @@ class DatosEmpleado:
                 datetime.strptime(fecha_contrato, "%Y-%m-%d")
                 return fecha_contrato
             except ValueError:
-                print("Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
+                print(Fore.RED + "Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
     
     @staticmethod
     def __obtenerSalario() -> int:
@@ -38,8 +39,8 @@ class DatosEmpleado:
             try:
                 salario = int(input("SALARIO (clp): $"))
                 if salario < 0:
-                    print("Debe ingresar un salario valido")
+                    print(Fore.RED + "Debe ingresar un salario valido")
                     continue
                 return salario
             except ValueError:
-                print("Debe ingresar un número válido para el salario.")
+                print(Fore.RED + "Debe ingresar un número válido para el salario.")

@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+from colorama import Fore
 
 class DatosSucursal:
     
@@ -14,10 +15,10 @@ class DatosSucursal:
         while True:
             nombre = input("NOMBRE SUCURSAL: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s]+$", nombre):
-                print("El nombre de la sucursal solo debe contener caracteres alfanuméricos y espacios.")
+                print(Fore.RED + "El nombre de la sucursal solo debe contener caracteres alfanuméricos y espacios.")
                 continue
             elif len(nombre) < 3 or len(nombre) > 50:
-                print("El nombre de la sucursal debe tener entre 3 y 50 caracteres.")
+                print(Fore.RED + "El nombre de la sucursal debe tener entre 3 y 50 caracteres.")
                 continue
             return nombre
 
@@ -26,10 +27,10 @@ class DatosSucursal:
         while True:
             direccion = input("DIRECCION SUCURSAL: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s#.,-]+$", direccion):
-                print("La dirección contiene caracteres no permitidos.")
+                print(Fore.RED + "La dirección contiene caracteres no permitidos.")
                 continue
             elif len(direccion) < 5 or len(direccion) > 100:
-                print("La dirección debe tener entre 5 y 100 caracteres.")
+                print(Fore.RED + "La dirección debe tener entre 5 y 100 caracteres.")
                 continue
             return direccion
     
@@ -41,4 +42,4 @@ class DatosSucursal:
                 fecha = datetime.strptime(fecha_constitucion, "%Y-%m-%d")
                 return fecha
             except ValueError:
-                print("Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
+                print(Fore.RED + "Debe ingresar una fecha válida en el formato YYYY-MM-DD.")

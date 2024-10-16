@@ -31,5 +31,16 @@ class SucursalController:
         finally:
             self.__dao.desconectar()
     
+    def buscarSucursalID(self, s_id:int):
+        try:
+            sql = "SELECT * FROM SUCURSALES WHERE s_id = %s"
+            values = (s_id)
+            self.__dao.cursor.execute(sql,values)
+            sucursal = self.__dao.cursor.fetchone()
+            return sucursal
+        except:
+            print("Error al buscar al encontrar la sucursal")
+        
+    
 
         
