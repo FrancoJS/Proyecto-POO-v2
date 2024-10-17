@@ -99,7 +99,7 @@ class Funciones:
         datos = Empleado_Controller()
         empleados = datos.listarEmpleados()
         if not empleados:
-            print(Fore.RED + "No se encontraron empleados registrados")
+            print(Fore.RED + "¡No se encontraron empleados registrados!")
             system("pause")
             self.menuMesaAyuda()
         
@@ -158,17 +158,26 @@ class Funciones:
 
             
     def listarSucursales(self, e:bool = False):
-        datos_sucursal = SucursalController().listarSucursales()
-        table = BeautifulTable()
-        table.column_headers = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
-        system("cls")
-        print(Fore.BLUE + "SUCURSALES")
-        for sucursal in datos_sucursal:
-            table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
-        print(table)
-        if not e:
-            system("pause")
-            self.menuMesaAyuda()
+        try:
+            datos_sucursal = SucursalController().listarSucursales()
+            if not datos_sucursal:
+                print(Fore.RED + "¡No se encontraron sucursales registradas!")
+                system("pause")
+                self.menuMesaAyuda()
+                       
+            table = BeautifulTable()
+            table.column_headers = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
+            system("cls")
+            print(Fore.BLUE + "SUCURSALES")
+            for sucursal in datos_sucursal:
+                table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
+            print(table)
+            if not e:
+                system("pause")
+                self.menuMesaAyuda()
+        except Exception as e:
+            print(e)
+            
         
     
     def salirPrograma(self):

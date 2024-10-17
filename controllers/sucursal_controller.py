@@ -1,6 +1,7 @@
 from database.dao import DAO
 from models.Sucursal import Sucursal
-
+from colorama import Fore
+from os import system
 
 class SucursalController:
     def __init__(self):
@@ -26,8 +27,8 @@ class SucursalController:
             self.__dao.cursor.execute(sql)
             response = self.__dao.cursor.fetchall()
             return response
-        except Exception as e:
-            print(e)
+        except:
+            print("Ocurrió un error al buscar los datos")
         finally:
             self.__dao.desconectar()
     

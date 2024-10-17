@@ -34,8 +34,8 @@ class Empleado_Controller:
             self.__dao.cursor.execute(sql)
             result = self.__dao.cursor.fetchall()
             return result
-        except Exception as e:  
-            print(f"Ocurrió un error al buscar los datos: {e}")   
+        except:  
+            print(f"Ocurrió un error al buscar los datos")   
         finally:
             self.__dao.desconectar()
             
