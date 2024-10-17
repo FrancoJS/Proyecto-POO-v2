@@ -10,8 +10,6 @@ from beautifultable import BeautifulTable
 import sys
 
 class Funciones:
-    def __init__(self):
-        pass
                      
     def menuMesaAyuda(self):
         try:
@@ -108,7 +106,7 @@ class Funciones:
         system("cls")
         print(Fore.BLUE + "LISTAR EMPLEADOS")
         tabla = BeautifulTable(maxwidth=150)
-        tabla.columns.header = ["ID EMPLEADO","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
+        tabla.columns.header = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
         for empleado in empleados:
             tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8].strftime("%Y-%m-%d"), empleado[9], empleado[10]])
         print(tabla)
@@ -177,7 +175,3 @@ class Funciones:
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
         sys.exit(0)
 
-        
-func = Funciones()
-
-func.menuMesaAyuda()

@@ -17,7 +17,7 @@ class DatosPersona:
     @staticmethod
     def __obtenerRut() -> str:
         while True:
-            print(Fore.CYAN + "Si el digito verificador de su rut es 'K' reemplacelo con 0")
+            print(Fore.YELLOW + "Si el digito verificador de su rut es 'K' reemplacelo con 0")
             rut = input("RUT: ").strip()
                          
             if len(rut) < 2 or len(rut) > 12:

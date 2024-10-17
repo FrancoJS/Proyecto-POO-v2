@@ -8,7 +8,3 @@ class Persona:
         self.telefono = telefono
         self.correo = correo
         
-
-
-
-
