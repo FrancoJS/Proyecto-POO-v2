@@ -1,5 +1,6 @@
 from controllers.sucursal_controller import SucursalController
 from controllers.empleado_controller import Empleado_Controller
+from controllers.usuario_controller import UsuarioController
 from utils.obtener_datos_persona import DatosPersona
 from utils.obtener_datos_sucursal import DatosSucursal
 from utils.obtener_datos_empleado import DatosEmpleado
@@ -10,6 +11,31 @@ from beautifultable import BeautifulTable
 import sys
 
 class Funciones:
+    
+    def menuPrincipal(self):
+        system("cls")
+        print("MENU PRINCIPAL")
+        print("1. INICIAR SESION")
+        print("2. SALIR")
+        opcion = int(input("Digite una opcion: "))
+        
+        if opcion == 1:
+            self.iniciarSesion()
+    
+    
+    def iniciarSesion(self):
+        system("cls")
+        print(Fore.YELLOW + "----INICIAR SESION----")
+        rut = DatosPersona().obtenerRut()
+        con = input("Digite la Contraseña: ")
+        if not UsuarioController().buscarUsuario(rut, con):
+            print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
+            return
+        
+        print(Fore.GREEN + "¡Inicio de sesion exitoso!")
+        system("pause")
+        self.menuMesaAyuda()
+        
                      
     def menuMesaAyuda(self):
         try:
@@ -184,3 +210,6 @@ class Funciones:
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
         sys.exit(0)
 
+
+f = Funciones()
+f.menuPrincipal()

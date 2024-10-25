@@ -1,12 +1,11 @@
 from datetime import datetime
 import re
 from colorama import Fore
-from os import system
 
 class DatosPersona:
     
     def obtenerDatosPersona(self):
-        rut = self.__obtenerRut()
+        rut = self.obtenerRut()
         nombres = self.__obtenerNombre()
         apellido_p = self.__obtenerApellido("PATERNO")
         apellido_m = self.__obtenerApellido("MATERNO")
@@ -15,7 +14,7 @@ class DatosPersona:
         return rut, nombres, apellido_p, apellido_m, telefono, correo
         
     @staticmethod
-    def __obtenerRut() -> str:
+    def obtenerRut() -> str:
         while True:
             print(Fore.YELLOW + "Si el digito verificador de su rut es 'K' reemplacelo con 0")
             rut = input("RUT: ").strip()
