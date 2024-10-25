@@ -30,7 +30,7 @@ class Empleado_Controller:
 
     def listarEmpleados(self):
         try:
-            sql = "SELECT * FROM EMPLEADOS"
+            sql = "SELECT * FROM EMPLEADOS where es_id = 1"
             self.__dao.cursor.execute(sql)
             result = self.__dao.cursor.fetchall()
             return result
@@ -48,3 +48,4 @@ class Empleado_Controller:
             return empleado
         except:
             print("Error al buscar al encontrar al empleado")
+            

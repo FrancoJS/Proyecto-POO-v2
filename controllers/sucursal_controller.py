@@ -23,7 +23,7 @@ class SucursalController:
             
     def listarSucursales(self):
         try:
-            sql = "SELECT * FROM SUCURSALES"
+            sql = "SELECT * FROM SUCURSALES where es_id = 1"
             self.__dao.cursor.execute(sql)
             response = self.__dao.cursor.fetchall()
             return response
@@ -34,7 +34,7 @@ class SucursalController:
     
     def buscarSucursalID(self, s_id:int):
         try:
-            sql = "SELECT * FROM SUCURSALES WHERE s_id = %s"
+            sql = "SELECT * FROM SUCURSALES WHERE s_id = %s and es_id = 1"
             values = (s_id)
             self.__dao.cursor.execute(sql,values)
             sucursal = self.__dao.cursor.fetchone()
