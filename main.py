@@ -6,6 +6,6 @@ class Main:
         self.f = Funciones()
         
     def ejecutarPrograma(self):
-        self.f.menuMesaAyuda()
+        self.f.menuPrincipal()
         
 M = Main().ejecutarPrograma()

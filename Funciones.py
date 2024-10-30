@@ -1,6 +1,7 @@
 from controllers.sucursal_controller import SucursalController
-from controllers.empleado_controller import Empleado_Controller
+from controllers.empleado_controller import EmpleadoController
 from controllers.usuario_controller import UsuarioController
+from controllers.asignaciones_controller import AsignacionesController
 from utils.obtener_datos_persona import DatosPersona
 from utils.obtener_datos_sucursal import DatosSucursal
 from utils.obtener_datos_empleado import DatosEmpleado
@@ -9,6 +10,7 @@ init(autoreset=True)
 from os import system
 from beautifultable import BeautifulTable
 import sys
+from getpass import getpass
 
 class Funciones:
     
@@ -27,9 +29,9 @@ class Funciones:
     
     def iniciarSesion(self):
         system("cls")
-        print(Fore.YELLOW + "----INICIAR SESION----")
+        print(Fore.CYAN + "----INICIAR SESION----")
         rut = DatosPersona().obtenerRut()
-        con = input("Digite la Contraseña: ")
+        con = getpass("Digite la Contraseña: ")
         response = UsuarioController().buscarUsuario(rut, con)
         if not response:
             print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
@@ -60,7 +62,8 @@ class Funciones:
             print(Fore.CYAN + "---BIENVENIDO AL MENU DE ADMINISTRADOR---")
             print("1. Gestion de Empleados")
             print("2. Gestion de Sucursales")
-            print("3. Cerrar Sesion")
+            print("3. Gestion de Asignaciones")
+            print("4. Cerrar Sesion")
             opcion = int(input("Digite una opcion: "))
 
             if opcion == 1:
@@ -68,6 +71,8 @@ class Funciones:
             elif opcion == 2:
                 self.__gestionSucursales()
             elif opcion == 3:
+                self.gestionAsignaciones()
+            elif opcion == 4:
                 self.cerrarSesion()
             else:
                 print("Debe seleccionar una opcion válida.")
@@ -84,8 +89,8 @@ class Funciones:
             print(Fore.CYAN + "---BIENVENIDO AL MENU DE SUPERVISOR---")
             print("1. Listar Empleados")
             print("2. Listar Sucursales")
-            # print("3. Gestion Asignaciones")
-            print("3. Cerrar Sesion")
+            print("3. Gestion Asignaciones")
+            print("4. Cerrar Sesion")
             opcion = int(input("Digite una opcion: "))
 
             if opcion == 1:
@@ -93,6 +98,8 @@ class Funciones:
             elif opcion == 2:
                 self.listarSucursales()
             elif opcion == 3:
+                self.gestionAsignaciones()
+            elif opcion == 4:
                 self.cerrarSesion()
             else:
                 print("Debe seleccionar una opcion válida.")
@@ -141,10 +148,13 @@ class Funciones:
                 try:
                     s_id = int(input(Fore.CYAN + "INGRESE ID SUCURSAL DE EMPLEADO: "))
                     if s_id:
-                        break
+                        s_idEnDB = SucursalController().buscarSucursalID(s_id)
+                        if s_idEnDB:
+                            break
+                        print(Fore.RED + "¡Sucursal no existe!, Ingrese un id de sucursal valido")
                 except:
                     print("ID de Sucursal es necesaria")
-            empleadoController = Empleado_Controller()
+            empleadoController = EmpleadoController()
             empleadoController.crearEmpleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
             print(Fore.GREEN + "¡EMPLEADO CREADO EXITOSAMENTE!")
             select = input("¿Desea agregar otro empleado?\n Y. SI    N. NO: ").upper()
@@ -164,7 +174,7 @@ class Funciones:
             
         
     def listarEmpleado(self):
-        empleados = Empleado_Controller().listarEmpleados()
+        empleados = EmpleadoController().listarEmpleados()
         if not empleados:
             print(Fore.RED + "¡No se encontraron empleados registrados!")
             system("pause")
@@ -233,8 +243,8 @@ class Funciones:
             
     def listarSucursales(self, e:bool = False):
         try:
-            datos_sucursal = SucursalController().listarSucursales()
-            if not datos_sucursal:
+            datosSucursal = SucursalController().listarSucursales()
+            if not datosSucursal:
                 print(Fore.RED + "¡No se encontraron sucursales registradas!")
                 system("pause")
                 if self.__perfilID == 1:
@@ -246,7 +256,7 @@ class Funciones:
             table.column_headers = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
             system("cls")
             print(Fore.BLUE + "SUCURSALES")
-            for sucursal in datos_sucursal:
+            for sucursal in datosSucursal:
                 table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
             print(table)
             system("pause")
@@ -259,10 +269,91 @@ class Funciones:
             print(e)
             
             
+    def gestionAsignaciones(self):
+        try:
+            system('cls')
+            print(Fore.CYAN + "---MENU ASIGNACIONES---")
+            print("1. Listar asignaciones")
+            print("2. Reasignar empleado a nueva sucursal")
+            print("3. Volver")
+            opcion = int(input("Ingrese opcion: "))
+            if opcion == 1: 
+                self.listarAsignaciones()
+                pass
+            elif opcion == 2:
+                self.reasignarEmpleado()
+                pass
+            elif opcion == 3:
+                # self.menuMesaAyudaAdmin()
+                pass
+            else:
+                print("Debe seleccionar una de las opciones disponibles")
+                system("pause")
+                return self.__gestionSucursales()
+        except ValueError:
+            print("Uno de los valores ingresados en gestion sucursales no es válido. Reintentar.")
+            system("pause")
+            return self.__gestionSucursales()
+        
+    def listarAsignaciones(self):
+        try:
+            datosAsignaciones = AsignacionesController().listarAsignaciones()
+            if not datosAsignaciones:
+                print(Fore.RED + "¡No existen asignaciones!")
+                system("pause")
+                if self.__perfilID == 1:
+                    return self.menuMesaAyudaAdmin()
+                else:
+                    return self.menuMesaAyudaSupervisor()
+
+            table = BeautifulTable(maxwidth=150)
+            table.column_headers = ["ID EMPLEADO", "RUT EMPLEADO", "NOMBRES EMPLEADO", "APELLIDOS EMPLEADO", "ID SUCURSAL", "NOMBRE SUCURSAL", "DIRECCION SUCURSAL" ]
+            system("cls")
+            print(Fore.BLUE + "ASIGNACIONES DE EMPLEADOS A SUCURSALES")
+            for asignacion in datosAsignaciones:
+                table.rows.append([asignacion[0], asignacion[1], asignacion[2], asignacion[3], asignacion[4], asignacion[5], asignacion[6]])
+            print(table)
+            system("pause")
+            if self.__perfilID == 1:
+                return self.menuMesaAyudaAdmin()
+            else:
+                return self.menuMesaAyudaSupervisor()
+        except Exception as e:
+            print(e)
+            
+    def reasignarEmpleado(self):
+        try:
+            system("cls")
+            print(Fore.CYAN + "---REASIGNAR EMPLEADO---")
+            rut = DatosPersona.obtenerRut()
+            while True:
+                try:
+                    s_id = int(input("ID SUCURSAL NUEVA: "))
+                    if s_id:
+                        s_idEnDB = SucursalController().buscarSucursalID(s_id)
+                        if s_idEnDB:
+                            break
+                        print(Fore.RED + "¡Sucursal no existe!, Ingrese un id de sucursal valido.")
+                except:
+                    print("ID de Sucursal es necesaria")
+                
+            AsignacionesController().reasignarEmpleado(rut, s_id)
+            print(Fore.GREEN + "¡RESIGNACION EXITOSA!")
+            system("pause")
+            if self.__perfilID == 1:
+                return self.menuMesaAyudaAdmin()
+            else:
+                return self.menuMesaAyudaSupervisor()
+        except Exception as e:
+            print(e)
+            system("pause")
+            return self.reasignarEmpleado()
+            
+            
+        
+        
     def salirPrograma(self):
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
         sys.exit(0)
 
 
-f = Funciones()
-f.menuPrincipal()
