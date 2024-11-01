@@ -1,7 +1,6 @@
 from database.dao import DAO
 from colorama import Fore
 from .empleado_controller import EmpleadoController
-from .sucursal_controller import SucursalController
 
 class AsignacionesController:
     
