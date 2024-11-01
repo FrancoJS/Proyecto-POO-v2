@@ -54,3 +54,6 @@ class EmpleadoController:
             return empleado
         except:
             print("Error al buscar empleado")
+
+    def eliminarEmpleados(self):
+        pass

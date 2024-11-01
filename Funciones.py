@@ -116,13 +116,16 @@ class Funciones:
             print(Fore.CYAN + "---GESTIONAR EMPLEADO---")
             print("1. Ingresar nuevo empleado")
             print("2. Listar empleados")
-            print("3. Volver")
+            print("3. Eliminar empleados")
+            print("4. Volver")
             select = int(input("Seleccionar opcion: "))
             if select == 1:
                 self.crearEmpleado()
             elif select == 2:
-                self.listarEmpleado()
+                self.listarEmpleados()
             elif select == 3:
+                self.eliminarEmpleado()
+            elif select == 4:
                 self.menuMesaAyudaAdmin()
             else:
                 print(Fore.RED + "Debe seleccionar una de las opciones disponibles, Reintentar.")
@@ -173,7 +176,7 @@ class Funciones:
             
             
         
-    def listarEmpleado(self):
+    def listarEmpleados(self):
         empleados = EmpleadoController().listarEmpleados()
         if not empleados:
             print(Fore.RED + "¡No se encontraron empleados registrados!")
@@ -197,6 +200,16 @@ class Funciones:
         else:
             self.menuMesaAyudaSupervisor()
              
+
+    def eliminarEmpleado(self):
+        system("cls")
+        print(Fore.RED + "---Eliminar Empleado---")
+        rut = DatosPersona().obtenerRut()
+        confirmacion = input(f"¿Esta seguro de elminar al empleado con rut {rut}?\n Y. Si  N. NO").upper()
+        if confirmacion == "Y":
+            pass
+        
+
         
     def __gestionSucursales(self):
         try:
@@ -348,9 +361,7 @@ class Funciones:
             print(e)
             system("pause")
             return self.reasignarEmpleado()
-            
-            
-        
+                   
         
     def salirPrograma(self):
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
