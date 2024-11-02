@@ -203,7 +203,7 @@ class Funciones:
 
     def eliminarEmpleado(self):
         system("cls")
-        print(Fore.RED + "---Eliminar Empleado---")
+        print(Fore.RED + "---ELIMINAR EMPLEADO---")
         rut = DatosPersona().obtenerRut()
         confirmacion = input(f"¿Esta seguro de elminar al empleado con rut {rut}?\n Y. Si  N. NO").upper()
         if confirmacion == "Y":
