@@ -54,3 +54,16 @@ class EmpleadoController:
             return empleado
         except:
             print("Error al buscar empleado")
+
+    def eliminarEmpleado(self, rut:str):
+        try:
+            empleado = self.buscarEmpleadoPorRut(rut)
+            if not empleado:
+                raise Exception(Fore.RED + "¡EMPLEADO NO EXISTE!")
+                
+            sql = "UPDATE EMPLEADOS SET es_id = 2 WHERE rut = %s" #%s = dato dinamico   
+            self.__dao.cursor.execute(sql, (rut))
+            self.__dao.connection.commit()
+        except Exception as e:
+            raise Exception(e)
+            

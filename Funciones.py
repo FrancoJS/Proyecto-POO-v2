@@ -94,7 +94,7 @@ class Funciones:
             opcion = int(input("Digite una opcion: "))
 
             if opcion == 1:
-                self.listarEmpleado()
+                self.listarEmpleados()
             elif opcion == 2:
                 self.listarSucursales()
             elif opcion == 3:
@@ -116,13 +116,16 @@ class Funciones:
             print(Fore.CYAN + "---GESTIONAR EMPLEADO---")
             print("1. Ingresar nuevo empleado")
             print("2. Listar empleados")
-            print("3. Volver")
+            print("3. Eliminar empleados")
+            print("4. Volver")
             select = int(input("Seleccionar opcion: "))
             if select == 1:
                 self.crearEmpleado()
             elif select == 2:
-                self.listarEmpleado()
+                self.listarEmpleados()
             elif select == 3:
+                self.eliminarEmpleado()
+            elif select == 4:
                 self.menuMesaAyudaAdmin()
             else:
                 print(Fore.RED + "Debe seleccionar una de las opciones disponibles, Reintentar.")
@@ -161,25 +164,25 @@ class Funciones:
             if select == 'Y':
                 return self.crearEmpleado()
             else:
-                self.menuMesaAyudaAdmin()
+                self.__gestionEmpleados()
         except ValueError:
             print(Fore.RED + "Uno de los valores ingresados no es válido. Reintentar.")
             system("pause")
-            self.menuMesaAyudaAdmin()
+            self.__gestionEmpleados()
         except Exception as e:
             print(e, Fore.RED + "Intente nuevamente")
             system("pause")
-            self.menuMesaAyudaAdmin()
+            self.__gestionEmpleados()
             
             
         
-    def listarEmpleado(self):
+    def listarEmpleados(self):
         empleados = EmpleadoController().listarEmpleados()
         if not empleados:
             print(Fore.RED + "¡No se encontraron empleados registrados!")
             system("pause")
             if self.__perfilID == 1:
-                self.menuMesaAyudaAdmin()
+                self.__gestionEmpleados()
             else:
                 self.menuMesaAyudaSupervisor()
         
@@ -193,10 +196,29 @@ class Funciones:
         system("pause")
         
         if self.__perfilID == 1:
-            self.menuMesaAyudaAdmin()
+            self.__gestionEmpleados()
         else:
             self.menuMesaAyudaSupervisor()
              
+
+    def eliminarEmpleado(self):
+        try:
+            system("cls")
+            print(Fore.CYAN + "---ELIMINAR EMPLEADO---")
+            rut = DatosPersona().obtenerRut()
+            confirmacion = input(Fore.RED + f"¿Esta seguro de elminar al empleado con rut {rut}?\n Y. Si  N. NO : ").upper()
+            if confirmacion == "Y":
+                EmpleadoController().eliminarEmpleado(rut)
+                print(Fore.GREEN + "¡EMPLEADO ELIMINADO EXITOSAMENTE!")
+                system("pause")
+                self.__gestionEmpleados()
+            else:
+                self.__gestionEmpleados()
+        except Exception as e:
+            print(e)
+            system("pause")
+            self.__gestionEmpleados()
+
         
     def __gestionSucursales(self):
         try:
@@ -234,7 +256,7 @@ class Funciones:
             if select == 'Y':
                 return self.crearSucursal()
             else:
-                self.menuMesaAyudaAdmin()
+                self.__gestionSucursales()
         except ValueError:
             print("Debe ingresar la fecha en el formato (YYYY-MM-DD)")
             system("pause")
@@ -248,7 +270,7 @@ class Funciones:
                 print(Fore.RED + "¡No se encontraron sucursales registradas!")
                 system("pause")
                 if self.__perfilID == 1:
-                    self.menuMesaAyudaAdmin()
+                    self.__gestionSucursales()
                 else:
                     self.menuMesaAyudaSupervisor()
                        
@@ -262,7 +284,7 @@ class Funciones:
             system("pause")
             if not e:
                 if self.__perfilID == 1:
-                    self.menuMesaAyudaAdmin()
+                    self.__gestionSucursales()
                 else:
                     self.menuMesaAyudaSupervisor()
         except Exception as e:
@@ -284,16 +306,18 @@ class Funciones:
                 self.reasignarEmpleado()
                 pass
             elif opcion == 3:
-                # self.menuMesaAyudaAdmin()
-                pass
+                if self.__perfilID == 1:
+                    self.menuMesaAyudaAdmin()
+                else:
+                    self.menuMesaAyudaSupervisor()
             else:
                 print("Debe seleccionar una de las opciones disponibles")
                 system("pause")
-                return self.__gestionSucursales()
+                return self.gestionAsignaciones()
         except ValueError:
             print("Uno de los valores ingresados en gestion sucursales no es válido. Reintentar.")
             system("pause")
-            return self.__gestionSucursales()
+            return self.gestionAsignaciones()
         
     def listarAsignaciones(self):
         try:
@@ -301,10 +325,7 @@ class Funciones:
             if not datosAsignaciones:
                 print(Fore.RED + "¡No existen asignaciones!")
                 system("pause")
-                if self.__perfilID == 1:
-                    return self.menuMesaAyudaAdmin()
-                else:
-                    return self.menuMesaAyudaSupervisor()
+                self.gestionAsignaciones()
 
             table = BeautifulTable(maxwidth=150)
             table.column_headers = ["ID EMPLEADO", "RUT EMPLEADO", "NOMBRES EMPLEADO", "APELLIDOS EMPLEADO", "ID SUCURSAL", "NOMBRE SUCURSAL", "DIRECCION SUCURSAL" ]
@@ -314,10 +335,7 @@ class Funciones:
                 table.rows.append([asignacion[0], asignacion[1], asignacion[2], asignacion[3], asignacion[4], asignacion[5], asignacion[6]])
             print(table)
             system("pause")
-            if self.__perfilID == 1:
-                return self.menuMesaAyudaAdmin()
-            else:
-                return self.menuMesaAyudaSupervisor()
+            self.gestionAsignaciones()
         except Exception as e:
             print(e)
             
@@ -340,17 +358,12 @@ class Funciones:
             AsignacionesController().reasignarEmpleado(rut, s_id)
             print(Fore.GREEN + "¡RESIGNACION EXITOSA!")
             system("pause")
-            if self.__perfilID == 1:
-                return self.menuMesaAyudaAdmin()
-            else:
-                return self.menuMesaAyudaSupervisor()
+            self.gestionAsignaciones()
         except Exception as e:
             print(e)
             system("pause")
-            return self.reasignarEmpleado()
-            
-            
-        
+            return self.gestionAsignaciones()
+                   
         
     def salirPrograma(self):
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
