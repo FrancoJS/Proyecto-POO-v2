@@ -226,13 +226,16 @@ class Funciones:
             print(Fore.CYAN + "---MENU SUCURSALES---")
             print("1. Ingresar nueva sucursal")
             print("2. Listar sucursales")
-            print("3. Volver")
+            print("3. Eliminar Sucursal")
+            print("4. Volver")
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
                 self.crearSucursal()
             elif opcion == 2:
                 self.listarSucursales()
             elif opcion == 3:
+                self.eliminarSucursal()
+            elif opcion == 4:
                 self.menuMesaAyudaAdmin()
             else:
                 print("Debe seleccionar una de las opciones disponibles")
@@ -289,6 +292,10 @@ class Funciones:
                     self.menuMesaAyudaSupervisor()
         except Exception as e:
             print(e)
+
+    def eliminarSucursal(self, id):
+        print(Fore.CYAN + "---Eliminar Sucursal---")
+        pass
             
             
     def gestionAsignaciones(self):
