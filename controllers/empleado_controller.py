@@ -55,5 +55,11 @@ class EmpleadoController:
         except:
             print("Error al buscar empleado")
 
-    def eliminarEmpleados(self):
-        pass
+    def eliminarEmpleado(self, rut:str):
+        try:
+            sql = "UPDATE EMPLEADOS SET es_id = 2 WHERE rut = %s" #%s = dato dinamico
+            self.__dao.cursor.execute(sql, (rut))
+            self.__dao.connection.commit()
+        except:
+            print("\n--- Error al Eliminar Empleado ---", end="\n\n")
+            

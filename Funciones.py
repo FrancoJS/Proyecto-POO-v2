@@ -204,11 +204,15 @@ class Funciones:
     def eliminarEmpleado(self):
         system("cls")
         print(Fore.RED + "---ELIMINAR EMPLEADO---")
+        print(Fore.CYAN + "---Eliminar Empleado---")
         rut = DatosPersona().obtenerRut()
-        confirmacion = input(f"¿Esta seguro de elminar al empleado con rut {rut}?\n Y. Si  N. NO").upper()
+        confirmacion = input(Fore.RED + f"¿Esta seguro de elminar al empleado con rut {rut}?\n Y. Si  N. NO : ").upper()
         if confirmacion == "Y":
-            pass
-        
+            EmpleadoController().eliminarEmpleado(rut)
+            print(Fore.GREEN + "¡EMPLEADO ELIMINADO EXITOSAMENTE!")
+            self.__gestionEmpleados()
+        else:
+            self.__gestionEmpleados()
 
         
     def __gestionSucursales(self):
