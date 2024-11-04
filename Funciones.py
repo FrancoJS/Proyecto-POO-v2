@@ -226,7 +226,7 @@ class Funciones:
             print(Fore.CYAN + "---MENU SUCURSALES---")
             print("1. Ingresar nueva sucursal")
             print("2. Listar sucursales")
-            print("3. Eliminar sucursal")
+            print("3. Eliminar Sucursal")
             print("4. Volver")
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
@@ -292,6 +292,10 @@ class Funciones:
                     self.menuMesaAyudaSupervisor()
         except Exception as e:
             print(e)
+
+    def eliminarSucursal(self, id):
+        print(Fore.CYAN + "---Eliminar Sucursal---")
+        pass
             
             
     def eliminarSucursal(self):
@@ -312,7 +316,7 @@ class Funciones:
             confirmacion = input(f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL {s_id}?  Y. Si  N. No : ")
             if confirmacion == "Y":
                 SucursalController().eliminarSucursal(s_id)
-                print(Fore.GREEN + "SUCURSAL ELIMINADA CON ÉXITO", end="\n\n")
+                print(Fore.GREEN + "SUCURSAL ELIMINADA CON ÉXITO")
                 system("pause")
                 self.__gestionSucursales()
             else:
