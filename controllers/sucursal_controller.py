@@ -41,7 +41,20 @@ class SucursalController:
             return sucursal
         except:
             print("Error al buscar al encontrar la sucursal")
+            
+    def eliminarSucursal(self, s_id:int):
+        try:
+            sucursal = self.buscarSucursalID(s_id)
+            if not sucursal:
+                print(Fore.RED + "No hay Sucursales!")
+            
+            sql = "UPDATE SUCURSALES SET ES_ID = 2 WHERE S_ID = %s"
+            self.__dao.cursor.execute(sql, (s_id))
+            self.__dao.connection.commit()
+        except Exception as e:
+            raise Exception(e)
         
+    
     
 
         

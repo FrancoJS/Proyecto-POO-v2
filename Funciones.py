@@ -226,13 +226,16 @@ class Funciones:
             print(Fore.CYAN + "---MENU SUCURSALES---")
             print("1. Ingresar nueva sucursal")
             print("2. Listar sucursales")
-            print("3. Volver")
+            print("3. Eliminar sucursal")
+            print("4. Volver")
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
                 self.crearSucursal()
             elif opcion == 2:
                 self.listarSucursales()
             elif opcion == 3:
+                self.eliminarSucursal()
+            elif opcion == 4:
                 self.menuMesaAyudaAdmin()
             else:
                 print("Debe seleccionar una de las opciones disponibles")
@@ -291,6 +294,38 @@ class Funciones:
             print(e)
             
             
+    def eliminarSucursal(self):
+        try:
+            system("cls")
+            print(Fore.CYAN + "---Eliminar sucursal---")
+            self.listarSucursales(True)
+            while True:
+                try:
+                    s_id = int(input("Ingrese el número de la Sucursal a ELIMINAR : "))
+                    if s_id:
+                        s_idEnDB = SucursalController().buscarSucursalID(s_id)
+                        if s_idEnDB:
+                            break
+                        print(Fore.RED + "Sucursal no Existe, ingrese un número de Sucursal Valido!")
+                except:
+                    print(Fore.RED + "Se necesita la ID de una Sucursal")
+            confirmacion = input(f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL {s_id}?  Y. Si  N. No : ")
+            if confirmacion == "Y":
+                SucursalController().eliminarSucursal(s_id)
+                print(Fore.GREEN + "SUCURSAL ELIMINADA CON ÉXITO", end="\n\n")
+                system("pause")
+                self.__gestionSucursales()
+            else:
+                print("Ok. Vuelves al Menú Sucursales")
+                system("pause")
+                self.__gestionSucursales()
+        except Exception as e:
+            system("cls")
+            print(e)
+            system("pause")
+            self.__gestionSucursales
+                              
+         
     def gestionAsignaciones(self):
         try:
             system('cls')

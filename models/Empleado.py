@@ -11,4 +11,3 @@ class Empleado (Persona):
         self.inicio_contrato = inicio_contrato
         self.salario = salario
         self.s_id = s_id
-        
