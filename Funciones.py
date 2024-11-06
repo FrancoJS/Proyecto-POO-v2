@@ -117,7 +117,8 @@ class Funciones:
             print("1. Ingresar nuevo empleado")
             print("2. Listar empleados")
             print("3. Eliminar empleados")
-            print("4. Volver")
+            print("4. Modificar empleados")
+            print("5. Volver")
             select = int(input("Seleccionar opcion: "))
             if select == 1:
                 self.crearEmpleado()
@@ -126,6 +127,8 @@ class Funciones:
             elif select == 3:
                 self.eliminarEmpleado()
             elif select == 4:
+                self.modificarEmpleado()
+            elif select == 5:
                 self.menuMesaAyudaAdmin()
             else:
                 print(Fore.RED + "Debe seleccionar una de las opciones disponibles, Reintentar.")
@@ -176,30 +179,32 @@ class Funciones:
             
             
         
-    def listarEmpleados(self):
-        empleados = EmpleadoController().listarEmpleados()
-        if not empleados:
-            print(Fore.RED + "¡No se encontraron empleados registrados!")
+    def listarEmpleados(self, e:bool = False):
+        try:
+            empleados = EmpleadoController().listarEmpleados()
+            if not empleados:
+                print(Fore.RED + "¡No se encontraron empleados registrados!")
+                system("pause")
+                if self.__perfilID == 1:
+                    self.__gestionEmpleados()
+                else:
+                    self.menuMesaAyudaSupervisor()
+                return
+            system("cls")
+            print(Fore.BLUE + "EMPLEADOS REGISTRADOS")
+            tabla = BeautifulTable(maxwidth=150)
+            tabla.columns.header = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
+            for empleado in empleados:
+                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8].strftime("%Y-%m-%d"), empleado[9], empleado[10]])
+            print(tabla)
             system("pause")
-            if self.__perfilID == 1:
-                self.__gestionEmpleados()
-            else:
-                self.menuMesaAyudaSupervisor()
-        
-        system("cls")
-        print(Fore.BLUE + "LISTAR EMPLEADOS")
-        tabla = BeautifulTable(maxwidth=150)
-        tabla.columns.header = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
-        for empleado in empleados:
-            tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8].strftime("%Y-%m-%d"), empleado[9], empleado[10]])
-        print(tabla)
-        system("pause")
-        
-        if self.__perfilID == 1:
-            self.__gestionEmpleados()
-        else:
-            self.menuMesaAyudaSupervisor()
-             
+            if not e:
+                if self.__perfilID == 1:
+                    self.__gestionEmpleados()
+                else:
+                    self.menuMesaAyudaSupervisor()
+        except Exception as e:
+            print(e)
 
     def eliminarEmpleado(self):
         try:
@@ -219,6 +224,33 @@ class Funciones:
             system("pause")
             self.__gestionEmpleados()
 
+    def modificarEmpleado(self):
+        try:
+            system("cls")
+            self.listarEmpleados(e=True)
+            print(Fore.CYAN + "--- Modificar empleado ---")
+            e_id = int(input("Seleccione el ID del empleado a modificar\nIngrese ID Empleado: "))
+            empleado_controller = EmpleadoController()
+            if not empleado_controller.verificarE_ID(e_id):
+                print(Fore.RED + "El ID ingresado no existe o no es valido. Reintente.")
+                system("pause")
+                self.__gestionEmpleados()
+            else:
+                print(Fore.GREEN + f"Empleado ID: {e_id} Seleccionada!")
+                system("pause")
+            rut, nombres, apellido_p, apellido_m, telefono, correo = DatosPersona().obtenerDatosPersona()
+            experiencia, inicio_contrato, salario = DatosEmpleado().obtenerDatosEmpleado()
+            EmpleadoController().modificarEmpleado(e_id, rut, nombres, apellido_p, apellido_m, telefono, correo, experiencia, inicio_contrato, salario)
+            system("pause")
+            self.__gestionEmpleados()
+        except ValueError:
+            print(Fore.RED + "Error: El ID ingresado no es valido.")
+            system("pause")
+            self.__gestionEmpleados()
+        except Exception as e:
+            print(e)
+            system("pause")
+            self.__gestionEmpleados()
         
     def __gestionSucursales(self):
         try:
@@ -297,15 +329,15 @@ class Funciones:
         try:
             system("cls")
             self.listarSucursales(e=True) #e sirve para llamar a la funcion listar pero no redirige a ese menu
-            print(Fore.BLUE + "--- Modificar Sucursal ---")
+            print(Fore.CYAN + "--- Modificar Sucursal ---")
             s_id = int(input("Seleccione el ID de la sucursal que desea modificar\nIngrese ID: "))
             sucursal_controller = SucursalController()
             if not sucursal_controller.verificarS_ID(s_id):
-                print("El ID ingresado no existe o no es valido. Reintente.")
+                print(Fore.RED + "El ID ingresado no existe o no es valido. Reintente.")
                 system("pause")
                 self.__gestionSucursales()
             else:
-                print(Fore.GREEN + f"Sucursal ID {s_id} Seleccionada!")
+                print(Fore.GREEN + f"Sucursal ID: {s_id} Seleccionada!")
             nombre, direccion, fecha_constitucion = DatosSucursal().obtenerDatosSucursal()
             SucursalController().modificarSucursal(s_id, nombre, direccion, fecha_constitucion)
             system("pause")

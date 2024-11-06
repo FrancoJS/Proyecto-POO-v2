@@ -66,4 +66,29 @@ class EmpleadoController:
             self.__dao.connection.commit()
         except Exception as e:
             raise Exception(e)
+    
+    def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
+                          telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
+        try:
+            sql = "UPDATE EMPLEADOS SET RUT = %s, NOMBRES = %s, APE_PATERNO = %s, APE_MATERNO = %s, TELEFONO = %s, CORREO = %s, EXPERIENCIA = %s, INICIO_CON = %s, SALARIO = %s WHERE e_id = %s and es_id = 1"
+            values = (rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_con, salario, e_id)
+            self.__dao.cursor.execute(sql,values)
+            self.__dao.connection.commit()
+            print(Fore.GREEN + "Empleado modificado exitosamente!")
+        except Exception as e:
+            print("Error al modificar el empleado", e)
+        finally:
+            self.__dao.desconectar()
             
+    def verificarE_ID(self, e_id:int):
+        try:
+            sql = "SELECT COUNT(*) FROM EMPLEADOS WHERE E_ID = %s AND es_id = 1"
+            self.__dao.cursor.execute(sql, (e_id,))
+            resultado = self.__dao.cursor.fetchone() #devuelve el valor de la tupla a resultado
+            if resultado[0] > 0:
+                return True
+        except Exception as e:
+            print(f"Error al verificar el ID del Empleado : {e}")
+            return False
+        finally:
+            self.__dao.desconectar()
