@@ -226,13 +226,16 @@ class Funciones:
             print(Fore.CYAN + "---MENU SUCURSALES---")
             print("1. Ingresar nueva sucursal")
             print("2. Listar sucursales")
-            print("3. Volver")
+            print("3. Modificar Sucursales")
+            print("4. Volver")
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
                 self.crearSucursal()
             elif opcion == 2:
                 self.listarSucursales()
             elif opcion == 3:
+                self.modificarSucursal()
+            elif opcion == 4:
                 self.menuMesaAyudaAdmin()
             else:
                 print("Debe seleccionar una de las opciones disponibles")
@@ -277,7 +280,7 @@ class Funciones:
             table = BeautifulTable()
             table.column_headers = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
             system("cls")
-            print(Fore.BLUE + "SUCURSALES")
+            print(Fore.BLUE + "-- SUCURSALES REGISTRADAS ---")
             for sucursal in datosSucursal:
                 table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
             print(table)
@@ -289,8 +292,33 @@ class Funciones:
                     self.menuMesaAyudaSupervisor()
         except Exception as e:
             print(e)
-            
-            
+    
+    def modificarSucursal(self):
+        try:
+            system("cls")
+            self.listarSucursales(e=True) #e sirve para llamar a la funcion listar pero no redirige a ese menu
+            print(Fore.BLUE + "--- Modificar Sucursal ---")
+            s_id = int(input("Seleccione el ID de la sucursal que desea modificar\nIngrese ID: "))
+            sucursal_controller = SucursalController()
+            if not sucursal_controller.verificarS_ID(s_id):
+                print("El ID ingresado no existe o no es valido. Reintente.")
+                system("pause")
+                self.__gestionSucursales()
+            else:
+                print(Fore.GREEN + f"Sucursal ID {s_id} Seleccionada!")
+            nombre, direccion, fecha_constitucion = DatosSucursal().obtenerDatosSucursal()
+            SucursalController().modificarSucursal(s_id, nombre, direccion, fecha_constitucion)
+            system("pause")
+            self.__gestionSucursales()
+        except ValueError:
+            print("Debe ingresar un valor valido. Reintente.")
+            system("pause")
+            self.__gestionSucursales()
+        except Exception as e:
+            print(e)
+            system("pause")
+            self.__gestionSucursales()
+    
     def gestionAsignaciones(self):
         try:
             system('cls')
