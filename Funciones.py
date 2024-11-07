@@ -259,6 +259,7 @@ class Funciones:
             print("1. Ingresar nueva sucursal")
             print("2. Listar sucursales")
             print("3. Modificar Sucursales")
+            print("4. Eliminar Sucursal")
             print("4. Volver")
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
@@ -268,6 +269,8 @@ class Funciones:
             elif opcion == 3:
                 self.modificarSucursal()
             elif opcion == 4:
+                self.eliminarSucursal()
+            elif opcion == 5:
                 self.menuMesaAyudaAdmin()
             else:
                 print("Debe seleccionar una de las opciones disponibles")
@@ -324,6 +327,39 @@ class Funciones:
                     self.menuMesaAyudaSupervisor()
         except Exception as e:
             print(e)
+            
+    def eliminarSucursal(self):
+        try:
+            system("cls")
+            print(Fore.CYAN + "---Eliminar sucursal---")
+            self.listarSucursales(True)
+            while True:
+                try:
+                    s_id = int(input("Ingrese el número de la Sucursal a ELIMINAR : "))
+                    if s_id:
+                        s_idEnDB = SucursalController().buscarSucursalID(s_id)
+                        if s_idEnDB:
+                            break
+                        print(Fore.RED + "Sucursal no Existe, ingrese un número de Sucursal Valido!")
+                except:
+                    print(Fore.RED + "Se necesita la ID de una Sucursal")
+            confirmacion = input(f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL {s_id}?  Y. Si  N. No : ")
+            if confirmacion == "Y":
+                SucursalController().eliminarSucursal(s_id)
+                print(Fore.GREEN + "SUCURSAL ELIMINADA CON ÉXITO")
+                system("pause")
+                self.__gestionSucursales()
+            else:
+                print("Ok. Vuelves al Menú Sucursales")
+                system("pause")
+                self.__gestionSucursales()
+        except Exception as e:
+            system("cls")
+            print(e)
+            system("pause")
+            self.__gestionSucursales
+                              
+ 
     
     def modificarSucursal(self):
         try:
