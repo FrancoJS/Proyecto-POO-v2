@@ -42,6 +42,7 @@ class SucursalController:
         except:
             print("Error al buscar al encontrar la sucursal")
             
+
     def eliminarSucursal(self, s_id:int):
         try:
             sucursal = self.buscarSucursalID(s_id)
@@ -54,7 +55,28 @@ class SucursalController:
         except Exception as e:
             raise Exception(e)
         
-    
-    
+    def modificarSucursal(self, s_id: int, nombre: str, direccion: str, fecha_constitucion):
+        try:
+            sql = "UPDATE SUCURSALES SET NOMBRE = %s, DIRECCION = %s, FECHA_CONST = %s WHERE s_id = %s and es_id = 1"
+            values = (nombre, direccion, fecha_constitucion, s_id)
+            self.__dao.cursor.execute(sql,values)
+            self.__dao.connection.commit()
+            print(Fore.GREEN + "Sucursal modificada exitosamente!")
+        except Exception as e:
+            print("Error al modificar la sucursal", e)
+        finally:
+            self.__dao.desconectar()
+    def verificarS_ID (self, s_id:int):
+        try:
+            sql = "SELECT COUNT(*) FROM SUCURSALES WHERE S_ID = %s AND es_id = 1"
+            self.__dao.cursor.execute(sql, (s_id,))
+            resultado = self.__dao.cursor.fetchone() #devuelve el valor de la tupla a resultado
+            if resultado[0] > 0:
+                return True
+        except Exception as e:
+            print(f"Error al verificar el ID de la sucursal : {e}")
+            return False
+        finally:
+            self.__dao.desconectar()
 
         
