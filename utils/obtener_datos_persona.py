@@ -13,6 +13,7 @@ class DatosPersona:
         correo = self.__obtenerCorreo()
         return rut, nombres, apellido_p, apellido_m, telefono, correo
         
+        
     @staticmethod
     def obtenerRut() -> str:
         while True:
@@ -36,6 +37,7 @@ class DatosPersona:
             rut_validado = f"{numero}-{dv}"
             return rut_validado
                 
+                
     @staticmethod
     def __obtenerNombre() -> str:
         while True:   
@@ -49,6 +51,7 @@ class DatosPersona:
                 continue
                 
             return nombres
+        
         
     @staticmethod
     def __obtenerApellido(tipo:str) -> str:
@@ -64,6 +67,7 @@ class DatosPersona:
             
             return apellido
         
+        
     @staticmethod
     def __obtenerTelefono() -> int:
         while True:
@@ -78,6 +82,7 @@ class DatosPersona:
                 continue
             
             return int(telefono)
+        
         
     @staticmethod
     def __obtenerCorreo() -> str:

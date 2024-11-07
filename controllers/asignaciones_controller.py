@@ -7,6 +7,7 @@ class AsignacionesController:
     def __init__(self):
         self.__dao = DAO()
         
+        
     def listarAsignaciones(self):
         try:
             sql = "SELECT E_ID, RUT, NOMBRES, CONCAT(APE_PATERNO, ' ', APE_MATERNO), S.S_ID, NOMBRE, DIRECCION FROM EMPLEADOS E JOIN SUCURSALES S ON E.S_ID = S.S_ID WHERE E.ES_ID = 1 AND S.ES_ID = 1"
@@ -18,6 +19,7 @@ class AsignacionesController:
             print(Fore.RED + "Ocurrio un error al buscar los datos")
         finally:
             self.__dao.desconectar()
+            
             
     def reasignarEmpleado(self, rut:str, s_id:int):
         try:

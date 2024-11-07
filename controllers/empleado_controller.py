@@ -6,8 +6,10 @@ from .sucursal_controller import SucursalController
 init(autoreset=True)
 
 class EmpleadoController:
+    
     def __init__(self):
         self.__dao = DAO()
+
 
     def crearEmpleado(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, experiencia:int, inicio_contrato:date, salario:int, s_id:int):
         try:
@@ -25,6 +27,7 @@ class EmpleadoController:
         finally:
             self.__dao.cursor.close()
 
+
     def listarEmpleados(self):
         try:
             sql = "SELECT * FROM EMPLEADOS where es_id = 1"
@@ -36,6 +39,7 @@ class EmpleadoController:
         finally:
             self.__dao.desconectar()
             
+            
     def buscarEmpleado(self, rut:str, telefono:int, correo:str):
         try:
             sql = "SELECT * FROM EMPLEADOS WHERE rut = %s or telefono = %s or correo = %s"
@@ -46,6 +50,7 @@ class EmpleadoController:
         except:
             print("Error al buscar empleado")
             
+            
     def buscarEmpleadoPorRut(self, rut:str):
         try:
             sql = "SELECT RUT, S_ID FROM EMPLEADOS WHERE rut = %s"
@@ -54,6 +59,7 @@ class EmpleadoController:
             return empleado
         except:
             print("Error al buscar empleado")
+
 
     def eliminarEmpleado(self, rut:str):
         try:
@@ -67,6 +73,7 @@ class EmpleadoController:
         except Exception as e:
             raise Exception(e)
     
+    
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
                           telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
         try:
@@ -79,6 +86,7 @@ class EmpleadoController:
             print("Error al modificar el empleado", e)
         finally:
             self.__dao.desconectar()
+            
             
     def verificarE_ID(self, e_id:int):
         try:

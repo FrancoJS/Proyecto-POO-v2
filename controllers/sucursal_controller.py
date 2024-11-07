@@ -4,8 +4,10 @@ from colorama import Fore
 from os import system
 
 class SucursalController:
+    
     def __init__(self):
         self.__dao = DAO()
+    
     
     def crearSucursal(self,nombre:str, direccion:str, fecha_constitucion):
         try:
@@ -21,6 +23,7 @@ class SucursalController:
         finally:
             self.__dao.desconectar()
             
+            
     def listarSucursales(self):
         try:
             sql = "SELECT * FROM SUCURSALES where es_id = 1"
@@ -31,6 +34,7 @@ class SucursalController:
             print("Ocurrió un error al buscar los datos")
         finally:
             self.__dao.desconectar()
+    
     
     def buscarSucursalID(self, s_id:int):
         try:
@@ -44,16 +48,13 @@ class SucursalController:
             
 
     def eliminarSucursal(self, s_id:int):
-        try:
-            sucursal = self.buscarSucursalID(s_id)
-            if not sucursal:
-                print(Fore.RED + "No hay Sucursales!")
-            
+        try: 
             sql = "UPDATE SUCURSALES SET ES_ID = 2 WHERE S_ID = %s"
             self.__dao.cursor.execute(sql, (s_id))
             self.__dao.connection.commit()
-        except Exception as e:
-            raise Exception(e)
+        except:
+            print("Error al eliminar la sucursal")
+        
         
     def modificarSucursal(self, s_id: int, nombre: str, direccion: str, fecha_constitucion):
         try:
@@ -66,6 +67,8 @@ class SucursalController:
             print("Error al modificar la sucursal", e)
         finally:
             self.__dao.desconectar()
+            
+            
     def verificarS_ID (self, s_id:int):
         try:
             sql = "SELECT COUNT(*) FROM SUCURSALES WHERE S_ID = %s AND es_id = 1"

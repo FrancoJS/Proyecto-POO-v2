@@ -46,9 +46,12 @@ class Funciones:
         elif self.__perfilID == 2:
             self.menuMesaAyudaSupervisor()
         
+        
     def cerrarSesion(self):
         select = input("¿Esta seguro de cerrar sesion?\n Y. SI    N. NO: ").upper()
         if select == 'Y':
+            print(Fore.YELLOW + "¡CERRANDO SESION!")
+            system("pause")
             return self.menuPrincipal()
         elif self.__perfilID == 1:
             return self.menuMesaAyudaAdmin()
@@ -83,6 +86,7 @@ class Funciones:
             system("pause")
             return self.menuMesaAyudaAdmin()
         
+        
     def menuMesaAyudaSupervisor(self):
         try:
             system("cls")
@@ -110,14 +114,15 @@ class Funciones:
             system("pause")
             return self.menuMesaAyudaSupervisor()
         
+        
     def __gestionEmpleados(self):
          try:
             system("cls")
             print(Fore.CYAN + "---GESTIONAR EMPLEADO---")
             print("1. Ingresar nuevo empleado")
             print("2. Listar empleados")
-            print("3. Eliminar empleados")
-            print("4. Modificar empleados")
+            print("3. Modificar empleados")
+            print("4. Eliminar empleados")
             print("5. Volver")
             select = int(input("Seleccionar opcion: "))
             if select == 1:
@@ -125,9 +130,9 @@ class Funciones:
             elif select == 2:
                 self.listarEmpleados()
             elif select == 3:
-                self.eliminarEmpleado()
-            elif select == 4:
                 self.modificarEmpleado()
+            elif select == 4:
+                self.eliminarEmpleado()
             elif select == 5:
                 self.menuMesaAyudaAdmin()
             else:
@@ -139,10 +144,7 @@ class Funciones:
             system("pause")
             return self.__gestionEmpleados()
 
-                
-#------------------------------------------BUSCAR MEJOR MANERA PARA MEJORAR FLUJO DE INGRESO DE DATOS--------------------
 
-#----------------------------------------- VERIFICAR FORMATO FECHA Y VERIFICAR S_ID
     def crearEmpleado(self):
         try:
             system("cls")
@@ -177,7 +179,6 @@ class Funciones:
             system("pause")
             self.__gestionEmpleados()
             
-            
         
     def listarEmpleados(self, e:bool = False):
         try:
@@ -206,6 +207,7 @@ class Funciones:
         except Exception as e:
             print(e)
 
+
     def eliminarEmpleado(self):
         try:
             system("cls")
@@ -224,11 +226,12 @@ class Funciones:
             system("pause")
             self.__gestionEmpleados()
 
+
     def modificarEmpleado(self):
         try:
             system("cls")
             self.listarEmpleados(e=True)
-            print(Fore.CYAN + "--- Modificar empleado ---")
+            print(Fore.CYAN + "---MODIFICAR EMPLEADO---")
             e_id = int(input("Seleccione el ID del empleado a modificar\nIngrese ID Empleado: "))
             empleado_controller = EmpleadoController()
             if not empleado_controller.verificarE_ID(e_id):
@@ -252,6 +255,7 @@ class Funciones:
             system("pause")
             self.__gestionEmpleados()
         
+        
     def __gestionSucursales(self):
         try:
             system('cls')
@@ -260,7 +264,7 @@ class Funciones:
             print("2. Listar sucursales")
             print("3. Modificar Sucursales")
             print("4. Eliminar Sucursal")
-            print("4. Volver")
+            print("5. Volver")
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
                 self.crearSucursal()
@@ -328,14 +332,15 @@ class Funciones:
         except Exception as e:
             print(e)
             
+            
     def eliminarSucursal(self):
         try:
             system("cls")
-            print(Fore.CYAN + "---Eliminar sucursal---")
+            print(Fore.CYAN + "---ELIMINAR SUCURSAL---")
             self.listarSucursales(True)
             while True:
                 try:
-                    s_id = int(input("Ingrese el número de la Sucursal a ELIMINAR : "))
+                    s_id = int(input("Ingrese el ID de la Sucursal a ELIMINAR: "))
                     if s_id:
                         s_idEnDB = SucursalController().buscarSucursalID(s_id)
                         if s_idEnDB:
@@ -343,7 +348,8 @@ class Funciones:
                         print(Fore.RED + "Sucursal no Existe, ingrese un número de Sucursal Valido!")
                 except:
                     print(Fore.RED + "Se necesita la ID de una Sucursal")
-            confirmacion = input(f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL {s_id}?  Y. Si  N. No : ")
+                    
+            confirmacion = input(f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL CON ID {s_id}?  Y. Si  N. No : ").upper()
             if confirmacion == "Y":
                 SucursalController().eliminarSucursal(s_id)
                 print(Fore.GREEN + "SUCURSAL ELIMINADA CON ÉXITO")
@@ -353,19 +359,16 @@ class Funciones:
                 print("Ok. Vuelves al Menú Sucursales")
                 system("pause")
                 self.__gestionSucursales()
-        except Exception as e:
-            system("cls")
-            print(e)
+        except:
             system("pause")
-            self.__gestionSucursales
+            self.__gestionSucursales()
                               
- 
     
     def modificarSucursal(self):
         try:
             system("cls")
-            self.listarSucursales(e=True) #e sirve para llamar a la funcion listar pero no redirige a ese menu
-            print(Fore.CYAN + "--- Modificar Sucursal ---")
+            self.listarSucursales(True) #e sirve para llamar a la funcion listar pero no redirige a ese menu
+            print(Fore.CYAN + "---MODIFICAR SUCURSAL---")
             s_id = int(input("Seleccione el ID de la sucursal que desea modificar\nIngrese ID: "))
             sucursal_controller = SucursalController()
             if not sucursal_controller.verificarS_ID(s_id):
@@ -386,6 +389,7 @@ class Funciones:
             print(e)
             system("pause")
             self.__gestionSucursales()
+    
     
     def gestionAsignaciones(self):
         try:
@@ -415,6 +419,7 @@ class Funciones:
             system("pause")
             return self.gestionAsignaciones()
         
+        
     def listarAsignaciones(self):
         try:
             datosAsignaciones = AsignacionesController().listarAsignaciones()
@@ -434,6 +439,7 @@ class Funciones:
             self.gestionAsignaciones()
         except Exception as e:
             print(e)
+            
             
     def reasignarEmpleado(self):
         try:
@@ -464,5 +470,3 @@ class Funciones:
     def salirPrograma(self):
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
         sys.exit(0)
-
-

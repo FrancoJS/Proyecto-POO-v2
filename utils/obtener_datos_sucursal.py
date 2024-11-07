@@ -10,6 +10,7 @@ class DatosSucursal:
         fecha_constitucion = self.__obtenerFechaConstitucion()
         return nombre, direccion, fecha_constitucion
     
+    
     @staticmethod
     def __obtenerNombreSucursal() -> str:
         while True:
@@ -22,6 +23,7 @@ class DatosSucursal:
                 continue
             return nombre
 
+
     @staticmethod
     def __obtenerDireccion() -> str:
         while True:
@@ -33,6 +35,7 @@ class DatosSucursal:
                 print(Fore.RED + "La dirección debe tener entre 5 y 100 caracteres.")
                 continue
             return direccion
+    
     
     @staticmethod
     def __obtenerFechaConstitucion() -> str:
