@@ -25,7 +25,7 @@ class EmpleadoController:
         except Exception as e:
             raise Exception(e)
         finally:
-            self.__dao.cursor.close()
+            self.__dao.desconectar()
 
 
     def listarEmpleados(self):
@@ -59,6 +59,8 @@ class EmpleadoController:
             return empleado
         except:
             print("Error al buscar empleado")
+        finally:
+            self.__dao.desconectar()
 
 
     def eliminarEmpleado(self, rut:str):
@@ -72,6 +74,8 @@ class EmpleadoController:
             self.__dao.connection.commit()
         except Exception as e:
             raise Exception(e)
+        finally:
+            self.__dao.desconectar()
     
     
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,

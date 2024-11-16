@@ -126,7 +126,7 @@ class Funciones:
     def __gestionEmpleados(self):
          try:
             system("cls")
-            print(Fore.CYAN + "---GESTIONAR EMPLEADO---")
+            print(Fore.CYAN + "---GESTIONAR EMPLEADOS---")
             print("1. Ingresar nuevo empleado")
             print("2. Listar empleados")
             print("3. Modificar empleados")
@@ -167,7 +167,12 @@ class Funciones:
                         s_idEnDB = SucursalController().buscarSucursalID(s_id)
                         if s_idEnDB:
                             break
-                        print(Fore.RED + "¡Sucursal no existe!, Ingrese un id de sucursal valido")
+                        print(Fore.RED + "¡Sucursal no existe!, Ingrese un id de sucursal valido.")
+                        opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                        if opcion == "N":
+                            print(Fore.LIGHTBLUE_EX + "Volviendo a menu Gestion Empleados...")
+                            system("pause")
+                            self.__gestionEmpleados()
                 except:
                     print("ID de Sucursal es necesaria")
             empleadoController = EmpleadoController()
@@ -178,12 +183,8 @@ class Funciones:
                 return self.crearEmpleado()
             else:
                 self.__gestionEmpleados()
-        except ValueError:
-            print(Fore.RED + "Uno de los valores ingresados no es válido. Reintentar.")
-            system("pause")
-            self.__gestionEmpleados()
-        except Exception as e:
-            print(e, Fore.RED + "Intente nuevamente")
+        except:
+            print(Fore.LIGHTBLUE_EX + "Volviendo a menu Gestion Empleados...")
             system("pause")
             self.__gestionEmpleados()
             
@@ -454,7 +455,7 @@ class Funciones:
             system("cls")
             self.listarEmpleados(True)
             print(Fore.CYAN + "---REASIGNAR EMPLEADO---")
-            print(Fore.CYAN + "Ingrese RUT de Empleado y Sucursal a la que desea reasignar")
+            print(Fore.LIGHTBLUE_EX + "Ingrese RUT de Empleado y Sucursal a la que desea reasignar")
             rut = DatosPersona.obtenerRut()
             empleado = EmpleadoController().buscarEmpleadoPorRut(rut)
             
