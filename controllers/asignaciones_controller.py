@@ -13,7 +13,6 @@ class AsignacionesController:
             sql = "SELECT E_ID, RUT, NOMBRES, CONCAT(APE_PATERNO, ' ', APE_MATERNO), S.S_ID, NOMBRE, DIRECCION FROM EMPLEADOS E JOIN SUCURSALES S ON E.S_ID = S.S_ID WHERE E.ES_ID = 1 AND S.ES_ID = 1"
             self.__dao.cursor.execute(sql)
             response = self.__dao.cursor.fetchall()
-            print(response)
             return response
         except:
             print(Fore.RED + "Ocurrio un error al buscar los datos")
@@ -21,14 +20,10 @@ class AsignacionesController:
             self.__dao.desconectar()
             
             
-    def reasignarEmpleado(self, rut:str, s_id:int):
+    def reasignarEmpleado(self, rut:str, s_id:int, empleado):
         try:
-            empleado = EmpleadoController().buscarEmpleadoPorRut(rut)
-            if not empleado:
-                raise Exception(Fore.RED + "¡El Rut del empleado no existe!, Ingreselo nuevamente")
-            
             if empleado[1] == s_id:
-                raise Exception(Fore.RED + "¡El empleado ya esta asignado a esta sucursal!, Ingreselo nuevamente")
+                raise Exception(Fore.RED + "¡El empleado ya esta asignado a ésta sucursal!, Ingreselo nuevamente.")
             
             sql = "UPDATE EMPLEADOS SET S_ID = %s WHERE rut = %s"
             values = (s_id, rut)

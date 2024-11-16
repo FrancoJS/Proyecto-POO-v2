@@ -15,16 +15,24 @@ from getpass import getpass
 class Funciones:
     
     def menuPrincipal(self):
-        system("cls")
-        print(Fore.CYAN + "----MENU PRINCIPAL----")
-        print("1. Iniciar Sesion")
-        print("2. Salir")
-        opcion = int(input("Digite una opcion: "))
-        
-        if opcion == 1:
-            self.iniciarSesion()
-        elif opcion == 2:
-            self.salirPrograma()
+        try:
+            system("cls")
+            print(Fore.CYAN + "----MENU PRINCIPAL----")
+            print("1. Iniciar Sesion")
+            print("2. Salir")
+            opcion = int(input("Digite una opcion: "))
+
+            if opcion == 1:
+                self.iniciarSesion()
+            elif opcion == 2:
+                self.salirPrograma()
+            else:
+                raise Exception
+
+        except:
+            print(Fore.RED + "¡DEBE INGRESAR UNA OPCION VALIDA!")
+            system("pause")
+            self.menuPrincipal()
     
     
     def iniciarSesion(self):
@@ -444,8 +452,27 @@ class Funciones:
     def reasignarEmpleado(self):
         try:
             system("cls")
+            self.listarEmpleados(True)
             print(Fore.CYAN + "---REASIGNAR EMPLEADO---")
+            print(Fore.CYAN + "Ingrese RUT de Empleado y Sucursal a la que desea reasignar")
             rut = DatosPersona.obtenerRut()
+            empleado = EmpleadoController().buscarEmpleadoPorRut(rut)
+            
+            if not empleado:
+                print(Fore.RED + "¡Empleado no existe!, Ingrese un RUT valido.")
+                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                if opcion == 'S':
+                    print(Fore.LIGHTBLUE_EX + "Volviendo a opcion Reasignar Empleado...")
+                    system("pause")
+                    return self.reasignarEmpleado()
+                else:
+                    print(Fore.LIGHTBLUE_EX + "Volviendo a menu Gestion Asignaciones...")
+                    system("pause")
+                    self.gestionAsignaciones()
+            
+            print(Fore.LIGHTBLUE_EX + "Monstrando Sucursales disponibles para Reasignacion")
+            system("pause")
+            self.listarSucursales(True)
             while True:
                 try:
                     s_id = int(input("ID SUCURSAL NUEVA: "))
@@ -454,10 +481,15 @@ class Funciones:
                         if s_idEnDB:
                             break
                         print(Fore.RED + "¡Sucursal no existe!, Ingrese un id de sucursal valido.")
+                        opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                        if opcion == "N":
+                            print(Fore.LIGHTBLUE_EX + "Volviendo a menu Gestion Asignaciones...")
+                            system("pause")
+                            self.gestionAsignaciones()
                 except:
-                    print("ID de Sucursal es necesaria")
+                    print(Fore.RED + "¡ID de Sucursal es necesaria!, Ingresela nuevamente.")
                 
-            AsignacionesController().reasignarEmpleado(rut, s_id)
+            AsignacionesController().reasignarEmpleado(rut, s_id, empleado)
             print(Fore.GREEN + "¡RESIGNACION EXITOSA!")
             system("pause")
             self.gestionAsignaciones()

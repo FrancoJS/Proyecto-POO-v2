@@ -38,7 +38,7 @@ class EmpleadoController:
             print(Fore.RED + "Ocurrió un error al buscar los datos")   
         finally:
             self.__dao.desconectar()
-            
+    
             
     def buscarEmpleado(self, rut:str, telefono:int, correo:str):
         try:

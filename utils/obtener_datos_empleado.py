@@ -23,6 +23,7 @@ class DatosEmpleado:
             except ValueError:
                 print(Fore.RED + "Debe ingresar un número válido para la experiencia.")
     
+    
     @staticmethod
     def __obtenerFechaContrato() -> str:
         while True:
@@ -32,6 +33,7 @@ class DatosEmpleado:
                 return fecha_contrato
             except ValueError:
                 print(Fore.RED + "Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
+    
     
     @staticmethod
     def __obtenerSalario() -> int:

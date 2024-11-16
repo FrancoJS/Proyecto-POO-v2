@@ -4,8 +4,10 @@ from colorama import Fore, Style, init
 from os import system
 
 class UsuarioController:
+    
     def __init__(self):
         self.__dao = DAO()
+        
         
     def buscarUsuario(self, rut:str, clave:str):
         try:
