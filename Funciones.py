@@ -45,23 +45,28 @@ class Funciones:
     
     
     def iniciarSesion(self):
-        system("cls")
-        print(Fore.CYAN + "---- INICIO DE SESIÓN ----")
-        rut = DatosPersona().obtenerRut()
-        con = getpass("Contraseña: ")
-        response = UsuarioController().buscarUsuario(rut, con)
-        if not response:
-            print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
+        try:
+            system("cls")
+            print(Fore.CYAN + "---- INICIO DE SESIÓN ----")
+            rut = DatosPersona().obtenerRut()
+            con = getpass("Contraseña: ")
+            response = UsuarioController().buscarUsuario(rut, con)
+            if not response:
+                print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
+                system("pause")
+                return self.menuPrincipal()
+            self.__perfilID = response
+
+            print(Fore.GREEN + "¡Inicio de Sesión Exitoso!")
             system("pause")
-            return self.menuPrincipal()
-        self.__perfilID = response
-        
-        print(Fore.GREEN + "¡Inicio de Sesión Exitoso!")
-        system("pause")
-        if self.__perfilID == 1:
-            self.menuMesaAyudaAdmin()
-        elif self.__perfilID == 2:
-            self.menuMesaAyudaSupervisor()
+            if self.__perfilID == 1:
+                self.menuMesaAyudaAdmin()
+            elif self.__perfilID == 2:
+                self.menuMesaAyudaSupervisor()
+        except:
+            print(Fore.LIGHTBLUE_EX + "Volviendo a Menu Principal...")
+            system("pause")
+            self.menuPrincipal()
         
         
     def cerrarSesion(self):
