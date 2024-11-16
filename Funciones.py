@@ -12,15 +12,24 @@ from beautifultable import BeautifulTable
 import sys
 from getpass import getpass
 
+
+from rich.console import Console
+from rich.table import Table
+
+
 class Funciones:
     
     def menuPrincipal(self):
         try:
             system("cls")
-            print(Fore.CYAN + "----MENU PRINCIPAL----")
-            print("1. Iniciar Sesion")
-            print("2. Salir")
-            opcion = int(input("Digite una opcion: "))
+            console = Console()
+            table = Table(title="[cyan on black]MENU PRINCIPAL[/cyan on black]", style="bold yellow")
+            table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
+            table.add_column("[cyan]Descripción[cyan]", style="bold white", )
+            table.add_row("1", "Iniciar Sesión")
+            table.add_row("2", "Salir")
+            console.print(table)
+            opcion = int(console.input("[bold white]Digite una opción: [/bold white]"))
 
             if opcion == 1:
                 self.iniciarSesion()
@@ -30,16 +39,16 @@ class Funciones:
                 raise Exception
 
         except:
-            print(Fore.RED + "¡DEBE INGRESAR UNA OPCION VALIDA!")
+            print(Fore.RED + "¡Debe ingresar una opcion válida!")
             system("pause")
             self.menuPrincipal()
     
     
     def iniciarSesion(self):
         system("cls")
-        print(Fore.CYAN + "----INICIAR SESION----")
+        print(Fore.CYAN + "---- INICIO DE SESIÓN ----")
         rut = DatosPersona().obtenerRut()
-        con = getpass("Digite la Contraseña: ")
+        con = getpass("Contraseña: ")
         response = UsuarioController().buscarUsuario(rut, con)
         if not response:
             print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
@@ -47,7 +56,7 @@ class Funciones:
             return self.menuPrincipal()
         self.__perfilID = response
         
-        print(Fore.GREEN + "¡INICIO DE SESION EXITOSO!")
+        print(Fore.GREEN + "¡Inicio de Sesión Exitoso!")
         system("pause")
         if self.__perfilID == 1:
             self.menuMesaAyudaAdmin()
@@ -56,9 +65,9 @@ class Funciones:
         
         
     def cerrarSesion(self):
-        select = input("¿Esta seguro de cerrar sesion?\n Y. SI    N. NO: ").upper()
-        if select == 'Y':
-            print(Fore.YELLOW + "¡CERRANDO SESION!")
+        select = input("¿Esta seguro de cerrar sesión? (S/N): ").strip().upper()
+        if select == "S":
+            print(Fore.YELLOW + "¡Cerrando Sesión!")
             system("pause")
             return self.menuPrincipal()
         elif self.__perfilID == 1:
@@ -69,13 +78,17 @@ class Funciones:
                           
     def menuMesaAyudaAdmin(self):
         try:
+            console = Console()
             system("cls")
-            print(Fore.CYAN + "---BIENVENIDO AL MENU DE ADMINISTRADOR---")
-            print("1. Gestion de Empleados")
-            print("2. Gestion de Sucursales")
-            print("3. Gestion de Asignaciones")
-            print("4. Cerrar Sesion")
-            opcion = int(input("Digite una opcion: "))
+            table = Table(title="[bold cyan]BIENVENIDO AL MENU DE ADMINISTRADOR[/bold cyan]", style="bold yellow")
+            table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
+            table.add_column("[cyan]Descripción[cyan]", style="bold white", )
+            table.add_row("1", "Gestion de Empleados")
+            table.add_row("2", "Gestion de Sucursales")
+            table.add_row("3", "Gestion de Asignaciones")
+            table.add_row("4", "Cerrar Sesion")
+            console.print(table)
+            opcion = int(console.input("[bold white]Digite una opcion: [/bold white]"))
 
             if opcion == 1:
                 self.__gestionEmpleados()

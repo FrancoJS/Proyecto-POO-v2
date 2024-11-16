@@ -27,7 +27,7 @@ class DatosPersona:
                     raise Exception
                 
             print(Fore.YELLOW + "Si el digito verificador de su rut es 'K' reemplacelo con 0")
-            rut = input("RUT: ").strip()
+            rut = input("Rut: ").strip()
                          
             if len(rut) < 2 or len(rut) > 12:
                 print(Fore.RED + "La longitud del RUT no es válida.")
