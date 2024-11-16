@@ -9,7 +9,7 @@ from colorama import Fore,init
 init(autoreset=True)
 from os import system
 from beautifultable import BeautifulTable
-import sys
+import os
 from getpass import getpass
 
 
@@ -30,14 +30,13 @@ class Funciones:
             table.add_row("2", "Salir")
             console.print(table)
             opcion = int(console.input("[bold white]Digite una opción: [/bold white]"))
-
+        
             if opcion == 1:
                 self.iniciarSesion()
             elif opcion == 2:
                 self.salirPrograma()
             else:
-                raise Exception
-
+                raise Exception 
         except:
             print(Fore.RED + "¡Debe ingresar una opcion válida!")
             system("pause")
@@ -520,4 +519,4 @@ class Funciones:
         
     def salirPrograma(self):
         print(Fore.YELLOW + "¡GRACIAS POR USAR EL SISTEMA!")
-        sys.exit(0)
+        os._exit(0)
