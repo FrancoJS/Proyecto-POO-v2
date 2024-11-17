@@ -24,8 +24,6 @@ class EmpleadoController:
             self.__dao.connection.commit()
         except Exception as e:
             raise Exception(e)
-        finally:
-            self.__dao.desconectar()
 
 
     def listarEmpleados(self):
@@ -36,9 +34,6 @@ class EmpleadoController:
             return result
         except:  
             print(Fore.RED + "Ocurrió un error al buscar los datos")   
-        finally:
-            self.__dao.desconectar()
-    
             
     def buscarEmpleado(self, rut:str, telefono:int, correo:str):
         try:
@@ -69,23 +64,15 @@ class EmpleadoController:
             return empleado
         except:
             print("Error al buscar empleado")
-        finally:
-            self.__dao.desconectar()
 
 
     def eliminarEmpleado(self, rut:str):
         try:
-            empleado = self.buscarEmpleadoPorRut(rut)
-            if not empleado:
-                raise Exception(Fore.RED + "¡EMPLEADO NO EXISTE!")
-                
             sql = "UPDATE EMPLEADOS SET es_id = 2 WHERE rut = %s" #%s = dato dinamico   
             self.__dao.cursor.execute(sql, (rut))
             self.__dao.connection.commit()
-        except Exception as e:
-            raise Exception(e)
-        finally:
-            self.__dao.desconectar()
+        except:
+            raise Exception("Error al eliminar empleado")
             
     def eliminarEmpleadoPorSucursal(self, s_id:int):
         try:
@@ -98,8 +85,6 @@ class EmpleadoController:
             self.__dao.connection.commit()
         except Exception as e:
             raise Exception(e)
-        finally:
-            self.__dao.desconectar()
             
     
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
@@ -112,8 +97,6 @@ class EmpleadoController:
             print(Fore.GREEN + "Empleado modificado exitosamente!")
         except Exception as e:
             print("Error al modificar el empleado", e)
-        finally:
-            self.__dao.desconectar()
             
             
     def verificarE_ID(self, e_id:int):
@@ -126,5 +109,3 @@ class EmpleadoController:
         except Exception as e:
             print(f"Error al verificar el ID del Empleado : {e}")
             return False
-        finally:
-            self.__dao.desconectar()

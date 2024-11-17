@@ -3,6 +3,7 @@ import re
 from colorama import Fore
 from os import system
 from rich.console import Console
+from utils.mensajes import reintentar
 
 class DatosPersona:
     
@@ -27,8 +28,7 @@ class DatosPersona:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             console.print("[bold white]Si el digito verificador de su rut es [bold yellow]'K'[/bold yellow] reemplacelo con 0")
@@ -59,8 +59,7 @@ class DatosPersona:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             nombres = console.input("[bold cyan]Nombres: ").strip()
@@ -81,8 +80,7 @@ class DatosPersona:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             apellido = console.input(f"[bold cyan]Apellido {tipo}: ").strip()
@@ -103,8 +101,7 @@ class DatosPersona:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             telefono = console.input("[bold cyan]Telefono: +56")
@@ -126,8 +123,7 @@ class DatosPersona:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             correo = console.input("[bold cyan]Correo: ")

@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 from colorama import Fore
 from rich.console import Console
+from utils.mensajes import reintentar
 
 
 class DatosEmpleado: 
@@ -20,8 +21,7 @@ class DatosEmpleado:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             try:
@@ -40,8 +40,7 @@ class DatosEmpleado:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             fecha_contrato = console.input("[bold cyan]FECHA INICIO CONTRATO (YYYY-MM-DD): ").strip()
@@ -57,8 +56,7 @@ class DatosEmpleado:
         console = self.console
         while True:
             if error:
-                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
-                if opcion == "N":
+                if not reintentar():
                     raise Exception
                 
             try:
