@@ -1,8 +1,13 @@
 from datetime import datetime
 import re
 from colorama import Fore
+from rich.console import Console
+from utils.mensajes import reintentar
 
 class DatosSucursal:
+    
+    def __init__(self) -> None:
+            self.console = Console()
     
     def obtenerDatosSucursal(self):
         nombre = self.__obtenerNombreSucursal()
@@ -11,38 +16,55 @@ class DatosSucursal:
         return nombre, direccion, fecha_constitucion
     
     
-    @staticmethod
-    def __obtenerNombreSucursal() -> str:
+    def __obtenerNombreSucursal(self, error:bool = False) -> str:
+        console = self.console
         while True:
-            nombre = input("NOMBRE SUCURSAL: ").strip()
+            if error:
+                if not reintentar():
+                    raise Exception
+                
+            nombre = console.input("[cyan]Nombre Sucursal: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s]+$", nombre):
                 print(Fore.RED + "El nombre de la sucursal solo debe contener caracteres alfanuméricos y espacios.")
+                error = True
                 continue
             elif len(nombre) < 3 or len(nombre) > 50:
                 print(Fore.RED + "El nombre de la sucursal debe tener entre 3 y 50 caracteres.")
+                error = True
                 continue
             return nombre
 
 
-    @staticmethod
-    def __obtenerDireccion() -> str:
+    def __obtenerDireccion(self, error:bool = False) -> str:
+        console = self.console
         while True:
-            direccion = input("DIRECCION SUCURSAL: ").strip()
+            if error:
+                if not reintentar():
+                    raise Exception
+                
+            direccion = console.input("[cyan]Dirección Sucursal: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s#.,-]+$", direccion):
                 print(Fore.RED + "La dirección contiene caracteres no permitidos.")
+                error = True
                 continue
             elif len(direccion) < 5 or len(direccion) > 100:
                 print(Fore.RED + "La dirección debe tener entre 5 y 100 caracteres.")
+                error = True
                 continue
             return direccion
     
     
-    @staticmethod
-    def __obtenerFechaConstitucion() -> str:
+    def __obtenerFechaConstitucion(self, error:bool = False) -> str:
+        console = self.console
         while True:
-            fecha_constitucion = input("FECHA CONSTITUCION (YYYY-MM-DD): ").strip()
+            if error:
+                if not reintentar():
+                    raise Exception
+                
+            fecha_constitucion = console.input("[cyan]Fecha Constitución (YYYY-MM-DD): ").strip()
             try:
                 fecha = datetime.strptime(fecha_constitucion, "%Y-%m-%d")
                 return fecha
             except ValueError:
-                print(Fore.RED + "Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
+                print(Fore.RED + "Debe ingresar una fecha válida en el formato (YYYY-MM-DD).")
+                error = True

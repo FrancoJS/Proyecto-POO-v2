@@ -34,12 +34,13 @@ class EmpleadoController:
             return result
         except:  
             print(Fore.RED + "Ocurrió un error al buscar los datos")   
+        
             
     def buscarEmpleado(self, rut:str, telefono:int, correo:str):
         try:
             sql = "SELECT * FROM EMPLEADOS WHERE rut = %s or telefono = %s or correo = %s"
-            value = (rut, telefono, correo)
-            self.__dao.cursor.execute(sql, value)
+            values = (rut, telefono, correo)
+            self.__dao.cursor.execute(sql, values)
             empleado = self.__dao.cursor.fetchone()
             return empleado
         except:
@@ -48,9 +49,10 @@ class EmpleadoController:
             
     def buscarEmpleadoPorSucursal(self, s_id:int):
         try:
-            sql = "SELECT * FROM EMPLEADOS WHERE s_id = %s and es_id = 1"
+            sql = "SELECT E_ID, RUT, NOMBRES, CONCAT(APE_PATERNO, ' ', APE_MATERNO), TELEFONO, CORREO, S_ID FROM EMPLEADOS WHERE s_id = %s and es_id = 1"
+            value = (s_id)
             self.__dao.cursor.execute(sql, (s_id))
-            empleado = self.__dao.cursor.fetchone()
+            empleado = self.__dao.cursor.fetchall()
             return empleado
         except:
             print("Error al buscar empleado")        
@@ -93,7 +95,7 @@ class EmpleadoController:
             empleado = self.buscarEmpleado(rut, telefono, correo)
             
             if empleado:
-                raise Exception(Fore.RED + "¡Ya hay Empleados registrados con el Rut, Telefono o Correo proporcionados!")
+                raise Exception(Fore.RED + "¡Ya existen Empleados registrados con el Rut, Telefono o Correo proporcionados!")
                 
             sql = "UPDATE EMPLEADOS SET RUT = %s, NOMBRES = %s, APE_PATERNO = %s, APE_MATERNO = %s, TELEFONO = %s, CORREO = %s, EXPERIENCIA = %s, INICIO_CON = %s, SALARIO = %s WHERE e_id = %s and es_id = 1"
             values = (rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_con, salario, e_id)
