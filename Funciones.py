@@ -15,20 +15,27 @@ from getpass import getpass
 
 from rich.console import Console
 from rich.table import Table
+from rich import box
+import time
+from rich.prompt import Prompt
 
 
 class Funciones:
     
+    def __init__(self) -> None:
+        self.console = Console()
+    
     def menuPrincipal(self):
         try:
             system("cls")
-            console = Console()
-            table = Table(title="[cyan on black]MENU PRINCIPAL[/cyan on black]", style="bold yellow")
+            console = self.console
+            table = Table(title="[cyan]MENU PRINCIPAL[cyan]", style="bold yellow", box=box.ROUNDED)
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
             table.add_row("1", "Iniciar Sesión")
             table.add_row("2", "Salir")
             console.print(table)
+
             opcion = int(console.input("[bold white]Digite una opción: [/bold white]"))
         
             if opcion == 1:
@@ -46,14 +53,15 @@ class Funciones:
     def iniciarSesion(self):
         try:
             system("cls")
-            print(Fore.CYAN + "---- INICIO DE SESIÓN ----")
+            console = Console(width=50)
+            console.rule("[cyan]INICIO DE SESIÓN[/cyan]", style="bold white")
             rut = DatosPersona().obtenerRut()
             con = getpass("Contraseña: ")
             response = UsuarioController().buscarUsuario(rut, con)
             if not response:
                 print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
                 system("pause")
-                return self.menuPrincipal()
+                raise Exception
             self.__perfilID = response
 
             print(Fore.GREEN + "¡Inicio de Sesión Exitoso!")
@@ -63,28 +71,33 @@ class Funciones:
             elif self.__perfilID == 2:
                 self.menuMesaAyudaSupervisor()
         except:
-            print(Fore.LIGHTBLUE_EX + "Volviendo a Menu Principal...")
-            system("pause")
+            with console.status("[bold yellow]Volviendo a Menu Principal...", spinner="dots"):
+                time.sleep(1.2)
+                
             self.menuPrincipal()
         
         
     def cerrarSesion(self):
-        select = input("¿Esta seguro de cerrar sesión? (S/N): ").strip().upper()
-        if select == "S":
-            print(Fore.YELLOW + "¡Cerrando Sesión!")
-            system("pause")
-            return self.menuPrincipal()
-        elif self.__perfilID == 1:
-            return self.menuMesaAyudaAdmin()
+        console = self.console
+        opcion = console.input("[bold white]¿Esta seguro de cerrar sesión? [bold yellow](S/N): ").strip().upper()
+        if opcion == "S":
+            with console.status("[bold yellow]Cerrando Sesión...", spinner="dots"):
+                time.sleep(1.2)
+            self.menuPrincipal()
+        elif opcion == "N" and self.__perfilID == 1:
+            self.menuMesaAyudaAdmin()
+        elif self.__perfilID == 2:
+            self.menuMesaAyudaSupervisor()
         else:
-            return self.menuMesaAyudaSupervisor()
+            console.print("[bold red]Debe ingresar una opcion válida. [bold yellow](S/N)")
+            self.cerrarSesion()
         
-                          
+                                
     def menuMesaAyudaAdmin(self):
         try:
-            console = Console()
             system("cls")
-            table = Table(title="[bold cyan]BIENVENIDO AL MENU DE ADMINISTRADOR[/bold cyan]", style="bold yellow")
+            console = Console()
+            table = Table(title="[cyan]BIENVENIDO AL MENU DE ADMINISTRADOR[/cyan]", style="bold yellow")
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
             table.add_row("1", "Gestion de Empleados")
@@ -103,7 +116,7 @@ class Funciones:
             elif opcion == 4:
                 self.cerrarSesion()
             else:
-                print("Debe seleccionar una opcion válida.")
+                print(Fore.RED + "Debe seleccionar una opcion válida.")
                 system("pause")
                 return self.menuMesaAyudaAdmin()
         except ValueError:
@@ -115,11 +128,15 @@ class Funciones:
     def menuMesaAyudaSupervisor(self):
         try:
             system("cls")
-            print(Fore.CYAN + "---BIENVENIDO AL MENU DE SUPERVISOR---")
-            print("1. Listar Empleados")
-            print("2. Listar Sucursales")
-            print("3. Gestion Asignaciones")
-            print("4. Cerrar Sesion")
+            console = Console()
+            table = Table(title="[cyan]BIENVENIDO AL MENU DE SUPERVISOR[/cyan]", style="bold yellow")
+            table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
+            table.add_column("[cyan]Descripción[cyan]", style="bold white", )
+            table.add_row("1", "Listar Empleados")
+            table.add_row("2", "Listar Sucursales")
+            table.add_row("3", "Gestion de Asignaciones")
+            table.add_row("4", "Cerrar Sesion")
+            console.print(table)
             opcion = int(input("Digite una opcion: "))
 
             if opcion == 1:
@@ -143,12 +160,17 @@ class Funciones:
     def __gestionEmpleados(self):
          try:
             system("cls")
-            print(Fore.CYAN + "---GESTIONAR EMPLEADOS---")
-            print("1. Ingresar nuevo empleado")
-            print("2. Listar empleados")
-            print("3. Modificar empleados")
-            print("4. Eliminar empleados")
-            print("5. Volver")
+            console = Console()
+            table = Table(title="[cyan]GESTIONAR EMPLEADOS[/cyan]", style="bold yellow")
+            table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
+            table.add_column("[cyan]Descripción[cyan]", style="bold white", )
+            table.add_row("1", "Crear Empleado")
+            table.add_row("2", "Listar Empleados")
+            table.add_row("3", "Modificar Empleados")
+            table.add_row("4", "Eliminar Empleado")
+            table.add_row("5", "Volver")
+            console.print(table)
+
             select = int(input("Seleccionar opcion: "))
             if select == 1:
                 self.crearEmpleado()
@@ -218,12 +240,16 @@ class Funciones:
                     self.menuMesaAyudaSupervisor()
                 return
             system("cls")
-            print(Fore.BLUE + "EMPLEADOS REGISTRADOS")
-            tabla = BeautifulTable(maxwidth=150)
-            tabla.columns.header = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO", "SUCURSAL"]
+            console = Console()
+            table = Table(title="[cyan]EMPLEADOS REGISTRADOS[/cyan]", style="bold yellow")
+            columnas = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO(clp)", "ID SUCURSAL"]
+            for columna in columnas:
+                table.add_column("[bold cyan]" + columna + "[bold cyan]", style="bold white", justify="center")
+                
             for empleado in empleados:
-                tabla.rows.append([empleado[0], empleado[1], empleado[2], empleado[3], empleado[4], empleado[5], empleado[6], empleado[7], empleado[8].strftime("%Y-%m-%d"), empleado[9], empleado[10]])
-            print(tabla)
+                table.add_row(str(empleado[0]), empleado[1], empleado[2], empleado[3], empleado[4], "+56 " + str(empleado[5]), empleado[6], str(empleado[7]) + " años", empleado[8].strftime("%Y-%m-%d"), "$" + str(empleado[9]), str(empleado[10]))
+                                
+            console.print(table)
             system("pause")
             if not e:
                 if self.__perfilID == 1:
@@ -285,12 +311,17 @@ class Funciones:
     def __gestionSucursales(self):
         try:
             system('cls')
-            print(Fore.CYAN + "---MENU SUCURSALES---")
-            print("1. Ingresar nueva sucursal")
-            print("2. Listar sucursales")
-            print("3. Modificar Sucursales")
-            print("4. Eliminar Sucursal")
-            print("5. Volver")
+            console = Console()
+            table = Table(title="[cyan]MENU SUCURSALES[cyan]", style="bold yellow")
+            table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
+            table.add_column("[cyan]Descripción[cyan]", style="bold white", )
+            table.add_row("1", "Crear Sucursal")
+            table.add_row("2", "Listar Sucursales")
+            table.add_row("3", "Modificar Sucursales")
+            table.add_row("4", "Eliminar Sucursal")
+            table.add_row("5", "Volver")
+            console.print(table)
+            
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
                 self.crearSucursal()
@@ -341,14 +372,17 @@ class Funciones:
                     self.__gestionSucursales()
                 else:
                     self.menuMesaAyudaSupervisor()
-                       
-            table = BeautifulTable()
-            table.column_headers = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
             system("cls")
-            print(Fore.BLUE + "-- SUCURSALES REGISTRADAS ---")
+            console = Console()
+            table = Table(title="[cyan]SUCURSALES REGISTRADAS[cyan]", style="bold yellow")
+            columnas = ["ID", "NOMBRE", "DIRECCION", "FECHA CONSTITUCION"]
+            
+            for columna in columnas:
+                table.add_column("[bold cyan]" + columna + "[/bold cyan]", justify="center", style="bold white")
+            
             for sucursal in datosSucursal:
-                table.rows.append([sucursal[0], sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d")])
-            print(table)
+                table.add_row(str(sucursal[0]), sucursal[1], sucursal[2], sucursal[3].strftime("%Y-%m-%d"))
+            console.print(table)
             system("pause")
             if not e:
                 if self.__perfilID == 1:
@@ -357,6 +391,7 @@ class Funciones:
                     self.menuMesaAyudaSupervisor()
         except Exception as e:
             print(e)
+            
             
     def eliminarSucursal(self):
         try:
@@ -445,10 +480,15 @@ class Funciones:
     def gestionAsignaciones(self):
         try:
             system('cls')
-            print(Fore.CYAN + "---MENU ASIGNACIONES---")
-            print("1. Listar asignaciones")
-            print("2. Reasignar empleado a nueva sucursal")
-            print("3. Volver")
+            console = Console()
+            table = Table(title="[cyan]MENU ASIGNACIONES[cyan]", style="bold yellow")
+            table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
+            table.add_column("[cyan]Descripción[cyan]", style="bold white", )
+            table.add_row("1", "Listar Asignaciones")
+            table.add_row("2", "Reasignar Empleado")
+            table.add_row("3", "Volver")
+            console.print(table)
+            
             opcion = int(input("Ingrese opcion: "))
             if opcion == 1: 
                 self.listarAsignaciones()
@@ -466,7 +506,7 @@ class Funciones:
                 system("pause")
                 return self.gestionAsignaciones()
         except ValueError:
-            print("Uno de los valores ingresados en gestion sucursales no es válido. Reintentar.")
+            print("Uno de los valores ingresados en gestion asignaciones no es válido. Reintentar.")
             system("pause")
             return self.gestionAsignaciones()
         
@@ -479,13 +519,17 @@ class Funciones:
                 system("pause")
                 self.gestionAsignaciones()
 
-            table = BeautifulTable(maxwidth=150)
-            table.column_headers = ["ID EMPLEADO", "RUT EMPLEADO", "NOMBRES EMPLEADO", "APELLIDOS EMPLEADO", "ID SUCURSAL", "NOMBRE SUCURSAL", "DIRECCION SUCURSAL" ]
             system("cls")
-            print(Fore.BLUE + "ASIGNACIONES DE EMPLEADOS A SUCURSALES")
+            console = Console()
+            table = Table(title="[cyan]ASIGNACIONES DE EMPLEADOS A SUCURSALES[cyan]", style="bold yellow")
+            columnas = ["ID EMPLEADO", "RUT EMPLEADO", "NOMBRES EMPLEADO", "APELLIDOS EMPLEADO", "ID SUCURSAL", "NOMBRE SUCURSAL", "DIRECCION SUCURSAL" ]
+    
+            for columna in columnas:
+                table.add_column("[bold cyan]" + columna + "[bold cyan]", justify="center", style="bold white")
+    
             for asignacion in datosAsignaciones:
-                table.rows.append([asignacion[0], asignacion[1], asignacion[2], asignacion[3], asignacion[4], asignacion[5], asignacion[6]])
-            print(table)
+                table.add_row(str(asignacion[0]), asignacion[1], asignacion[2], asignacion[3], str(asignacion[4]), asignacion[5], asignacion[6])
+            console.print(table)
             system("pause")
             self.gestionAsignaciones()
         except Exception as e:

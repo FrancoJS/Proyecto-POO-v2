@@ -1,8 +1,13 @@
 from datetime import datetime
 import re
 from colorama import Fore
+from rich.console import Console
+
 
 class DatosEmpleado: 
+    
+    def __init__(self) -> None:
+        self.console = Console()
     
     def obtenerDatosEmpleado(self):
         experiencia = self.__obtenerExperiencia()
@@ -11,16 +16,16 @@ class DatosEmpleado:
         return experiencia, inicio_contrato, salario
     
     
-    @staticmethod
-    def __obtenerExperiencia(error:bool = False) -> int:
+    def __obtenerExperiencia(self, error:bool = False) -> int:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar de nuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
             try:
-                experiencia = int(input("EXPERIENCIA (en años): "))
+                experiencia = int(console.input("[bold cyan]EXPERIENCIA (en años): "))
                 if experiencia < 0 or experiencia > 50:
                     print(Fore.RED + "La experiencia debe ser un valor entre 0 y 50 años.")
                     error = True
@@ -31,15 +36,15 @@ class DatosEmpleado:
                 error = True
     
     
-    @staticmethod
-    def __obtenerFechaContrato(error:bool = False) -> str:
+    def __obtenerFechaContrato(self, error:bool = False) -> str:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar de nuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
-            fecha_contrato = input("FECHA INICIO CONTRATO (YYYY-MM-DD): ").strip()
+            fecha_contrato = console.input("[bold cyan]FECHA INICIO CONTRATO (YYYY-MM-DD): ").strip()
             try:
                 datetime.strptime(fecha_contrato, "%Y-%m-%d")
                 return fecha_contrato
@@ -48,16 +53,16 @@ class DatosEmpleado:
                 error = True
     
     
-    @staticmethod
-    def __obtenerSalario(error:bool = False) -> int:
+    def __obtenerSalario(self, error:bool = False) -> int:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar de nuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
             try:
-                salario = int(input("SALARIO (clp): $"))
+                salario = int(console.input("[bold cyan]SALARIO (clp): $"))
                 if salario < 0:
                     print(Fore.RED + "Debe ingresar un salario valido")
                     error = True

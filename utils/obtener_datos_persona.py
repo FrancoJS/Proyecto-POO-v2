@@ -2,15 +2,20 @@ from datetime import datetime
 import re
 from colorama import Fore
 from os import system
+from rich.console import Console
 
 class DatosPersona:
+    
+    def __init__(self) -> None:
+            self.console = Console()
+    
     
     def obtenerDatosPersona(self):
         try:
             rut = self.obtenerRut()
             nombres = self.__obtenerNombre()
-            apellido_p = self.__obtenerApellido("PATERNO")
-            apellido_m = self.__obtenerApellido("MATERNO")
+            apellido_p = self.__obtenerApellido("Paterno")
+            apellido_m = self.__obtenerApellido("Materno")
             telefono = self.__obtenerTelefono()
             correo = self.__obtenerCorreo()
             return rut, nombres, apellido_p, apellido_m, telefono, correo
@@ -18,16 +23,16 @@ class DatosPersona:
             raise Exception
         
         
-    @staticmethod
-    def obtenerRut(error:bool = False) -> str:
+    def obtenerRut(self, error:bool = False) -> str:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
-            print(Fore.YELLOW + "Si el digito verificador de su rut es 'K' reemplacelo con 0")
-            rut = input("Rut: ").strip()
+            console.print("[bold white]Si el digito verificador de su rut es [bold yellow]'K'[/bold yellow] reemplacelo con 0")
+            rut = console.input("[bold cyan]Rut: ").strip()
                          
             if len(rut) < 2 or len(rut) > 12:
                 print(Fore.RED + "La longitud del RUT no es válida.")
@@ -50,15 +55,15 @@ class DatosPersona:
             return rut_validado
                 
                 
-    @staticmethod
-    def __obtenerNombre(error:bool = False) -> str:
+    def __obtenerNombre(self, error:bool = False) -> str:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
-            nombres = input("NOMBRES: ").strip()
+            nombres = console.input("[bold cyan]Nombres: ").strip()
             if not re.match("^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$", nombres):
                 print(Fore.RED + "Los nombres solo deben contener caracteres válidos.")
                 error = True
@@ -72,15 +77,15 @@ class DatosPersona:
             return nombres
         
         
-    @staticmethod
-    def __obtenerApellido(tipo:str, error:bool = False) -> str:
+    def __obtenerApellido(self, tipo:str, error:bool = False) -> str:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
-            apellido = input(f"APELLIDO {tipo}: ").strip()
+            apellido = console.input(f"[bold cyan]Apellido {tipo}: ").strip()
             if not apellido.isalpha():
                 print(Fore.RED + "El apellido no debe contener caracteres especiales ni espacios.")
                 error = True
@@ -94,15 +99,15 @@ class DatosPersona:
             return apellido
         
         
-    @staticmethod
-    def __obtenerTelefono(error:bool = False) -> int:
+    def __obtenerTelefono(self, error:bool = False) -> int:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
-            telefono = input("TELEFONO: +56")
+            telefono = console.input("[bold cyan]Telefono: +56")
             
             if not telefono.isdigit():
                 print(Fore.RED + "El teléfono debe contener solo números.")
@@ -117,15 +122,15 @@ class DatosPersona:
             return int(telefono)
         
         
-    @staticmethod
-    def __obtenerCorreo(error:bool = False) -> str:
+    def __obtenerCorreo(self, error:bool = False) -> str:
+        console = self.console
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = console.input("[bold white]¿Desea intentar denuevo?[/bold white] [bold yellow](S/N): [/ bold yellow]").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
-            correo = input("CORREO: ")
+            correo = console.input("[bold cyan]Correo: ")
             
             if len(correo) < 1 or len(correo) > 50:
                 print(Fore.RED + "El correo debe tener entre 1 y 50 caracteres.")
