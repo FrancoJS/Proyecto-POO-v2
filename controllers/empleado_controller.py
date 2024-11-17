@@ -90,12 +90,17 @@ class EmpleadoController:
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
                           telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
         try:
+            empleado = self.buscarEmpleado(rut, telefono, correo)
+            
+            if empleado:
+                raise Exception(Fore.RED + "¡Ya hay Empleados registrados con el Rut, Telefono o Correo proporcionados!")
+                
             sql = "UPDATE EMPLEADOS SET RUT = %s, NOMBRES = %s, APE_PATERNO = %s, APE_MATERNO = %s, TELEFONO = %s, CORREO = %s, EXPERIENCIA = %s, INICIO_CON = %s, SALARIO = %s WHERE e_id = %s and es_id = 1"
             values = (rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_con, salario, e_id)
             self.__dao.cursor.execute(sql,values)
             self.__dao.connection.commit()
         except Exception as e:
-            print("Error al modificar el empleado", e)
+            raise Exception(e)
             
             
     def verificarE_ID(self, e_id:int):

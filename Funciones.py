@@ -329,7 +329,7 @@ class Funciones:
                         redirigir("Volviendo a opcion Modificar Empleado...")
                         continue
                     else:
-                        print(Fore.GREEN + f"¡Empleado con ID: {e_id} Seleccionado!")
+                        print(Fore.GREEN + f"¡Empleado con ID {e_id} seleccionado!")
 
                     rut, nombres, apellido_p, apellido_m, telefono, correo = DatosPersona().obtenerDatosPersona()
                     experiencia, inicio_contrato, salario = DatosEmpleado().obtenerDatosEmpleado()
@@ -345,8 +345,10 @@ class Funciones:
                 redirigir("Volviendo a opcion Modificar Empleado...")
             except Exception as e:
                 print(e)
-                system("pause")
-                return self.__gestionEmpleados()
+                if not reintentar():
+                    redirigir("Volviendo a menu Gestión Empleados...")
+                    return self.__gestionEmpleados()
+                redirigir("Volviendo a opcion Modificar Empleado...")
         
         
     def __gestionSucursales(self):
