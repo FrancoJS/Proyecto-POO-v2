@@ -15,7 +15,7 @@ class DatosEmpleado:
     def __obtenerExperiencia(error:bool = False) -> int:
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = input("¿Desea intentar de nuevo? (S/N): ").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
@@ -35,7 +35,7 @@ class DatosEmpleado:
     def __obtenerFechaContrato(error:bool = False) -> str:
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = input("¿Desea intentar de nuevo? (S/N): ").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
@@ -52,7 +52,7 @@ class DatosEmpleado:
     def __obtenerSalario(error:bool = False) -> int:
         while True:
             if error:
-                opcion = input("¿Desea intentar denuevo? (S/N): ").strip().upper()
+                opcion = input("¿Desea intentar de nuevo? (S/N): ").strip().upper()
                 if opcion == "N":
                     raise Exception
                 
