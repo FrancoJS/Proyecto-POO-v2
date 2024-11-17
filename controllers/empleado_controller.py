@@ -53,7 +53,7 @@ class EmpleadoController:
             
     def buscarEmpleadoPorSucursal(self, s_id:int):
         try:
-            sql = "SELECT * FROM EMPLEADOS WHERE s_id = %s"
+            sql = "SELECT * FROM EMPLEADOS WHERE s_id = %s and es_id = 1"
             self.__dao.cursor.execute(sql, (s_id))
             empleado = self.__dao.cursor.fetchone()
             return empleado
@@ -63,7 +63,7 @@ class EmpleadoController:
             
     def buscarEmpleadoPorRut(self, rut:str):
         try:
-            sql = "SELECT RUT, S_ID FROM EMPLEADOS WHERE rut = %s"
+            sql = "SELECT RUT, S_ID FROM EMPLEADOS WHERE rut = %s and es_id = 1"
             self.__dao.cursor.execute(sql, (rut))
             empleado = self.__dao.cursor.fetchone()
             return empleado
@@ -100,6 +100,7 @@ class EmpleadoController:
             raise Exception(e)
         finally:
             self.__dao.desconectar()
+            
     
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
                           telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
