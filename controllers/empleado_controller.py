@@ -94,7 +94,6 @@ class EmpleadoController:
             values = (rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_con, salario, e_id)
             self.__dao.cursor.execute(sql,values)
             self.__dao.connection.commit()
-            print(Fore.GREEN + "Empleado modificado exitosamente!")
         except Exception as e:
             print("Error al modificar el empleado", e)
             

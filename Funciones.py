@@ -24,7 +24,7 @@ from rich.prompt import Prompt
 class Funciones:
     
     console = Console()
-    console50 = Console(width=80)
+    console80 = Console(width=80)
     
     def menuPrincipal(self):
         try:
@@ -54,7 +54,7 @@ class Funciones:
     def iniciarSesion(self):
         try:
             system("cls")
-            console = self.console50
+            console = self.console80
             console.rule("[cyan]INICIO DE SESIÓN", style="bold white")
             rut = DatosPersona().obtenerRut()
             con = getpass("Contraseña: ")
@@ -195,7 +195,7 @@ class Funciones:
     def crearEmpleado(self):
         try:
             system("cls")
-            console = self.console50
+            console = self.console80
             console.rule(title="[cyan]CREAR EMPLEADO", style="bold white")
             rut, nombres, ape_paterno, ape_materno, telefono, correo = DatosPersona().obtenerDatosPersona()
             experiencia, inicio_contrato, salario = DatosEmpleado().obtenerDatosEmpleado()
@@ -272,7 +272,7 @@ class Funciones:
             while True:
                 system("cls")
                 self.listarEmpleados(True)
-                console = self.console50
+                console = self.console80
                 console.rule(title="[cyan]ELIMINAR EMPLEADO", style="bold white")
                 rut = DatosPersona().obtenerRut()
                 empleado_controller = EmpleadoController()
@@ -311,32 +311,42 @@ class Funciones:
 
 
     def modificarEmpleado(self):
-        try:
-            system("cls")
-            self.listarEmpleados(e=True)
-            print(Fore.CYAN + "---MODIFICAR EMPLEADO---")
-            e_id = int(input("Seleccione el ID del empleado a modificar\nIngrese ID Empleado: "))
-            empleado_controller = EmpleadoController()
-            if not empleado_controller.verificarE_ID(e_id):
-                print(Fore.RED + "El ID ingresado no existe o no es valido. Reintente.")
+        while True:
+            try:
+                while True:
+                    system("cls")
+                    self.listarEmpleados(True)
+                    console = self.console80
+                    console.rule("[cyan]MODIFICAR EMPLEADO", style="bold white")
+                    e_id = int(console.input("[cyan]Ingrese ID de Empleado: "))
+                    empleado_controller = EmpleadoController()
+                    if not empleado_controller.verificarE_ID(e_id):
+                        print(Fore.RED + "El ID ingresado no es valido.")
+                        if not reintentar():
+                            redirigir("Volviendo a menu Gestion Empleados...")
+                            return self.__gestionEmpleados()
+
+                        redirigir("Volviendo a opcion Modificar Empleado...")
+                        continue
+                    else:
+                        print(Fore.GREEN + f"¡Empleado con ID: {e_id} Seleccionado!")
+
+                    rut, nombres, apellido_p, apellido_m, telefono, correo = DatosPersona().obtenerDatosPersona()
+                    experiencia, inicio_contrato, salario = DatosEmpleado().obtenerDatosEmpleado()
+                    EmpleadoController().modificarEmpleado(e_id, rut, nombres, apellido_p, apellido_m, telefono, correo, experiencia, inicio_contrato, salario)
+                    print(Fore.GREEN + "¡Empleado modificado exitosamente!")
+                    redirigir("Volviendo a menu Gestión Empleados...")
+                    self.__gestionEmpleados()
+            except ValueError:
+                print(Fore.RED + "El ID ingresado no es valido.")
+                if not reintentar():
+                    redirigir("Volviendo a menu Gestión Empleados...")
+                    return self.__gestionEmpleados()
+                redirigir("Volviendo a opcion Modificar Empleado...")
+            except Exception as e:
+                print(e)
                 system("pause")
-                self.__gestionEmpleados()
-            else:
-                print(Fore.GREEN + f"Empleado ID: {e_id} Seleccionada!")
-                system("pause")
-            rut, nombres, apellido_p, apellido_m, telefono, correo = DatosPersona().obtenerDatosPersona()
-            experiencia, inicio_contrato, salario = DatosEmpleado().obtenerDatosEmpleado()
-            EmpleadoController().modificarEmpleado(e_id, rut, nombres, apellido_p, apellido_m, telefono, correo, experiencia, inicio_contrato, salario)
-            system("pause")
-            self.__gestionEmpleados()
-        except ValueError:
-            print(Fore.RED + "Error: El ID ingresado no es valido.")
-            system("pause")
-            self.__gestionEmpleados()
-        except Exception as e:
-            print(e)
-            system("pause")
-            self.__gestionEmpleados()
+                return self.__gestionEmpleados()
         
         
     def __gestionSucursales(self):
