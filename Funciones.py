@@ -358,7 +358,6 @@ class Funciones:
         except Exception as e:
             print(e)
             
-            
     def eliminarSucursal(self):
         try:
             system("cls")
@@ -374,11 +373,37 @@ class Funciones:
                         print(Fore.RED + "Sucursal no Existe, ingrese un número de Sucursal Valido!")
                 except:
                     print(Fore.RED + "Se necesita la ID de una Sucursal")
-                    
-            confirmacion = input(f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL CON ID {s_id}?  Y. Si  N. No : ").upper()
+            
+            empleadosEnSucursal = EmpleadoController().buscarEmpleadoPorSucursal(s_id)
+            if empleadosEnSucursal:
+                self.listarEmpleados(True)
+                while True:
+                    try:
+                        print(Fore.YELLOW + "\n---ADVERTENCIA---")
+                        print("Se encontraron Empleados en la Sucursal seleccionada!")
+                        print("Usted tiene las siguientes opciones:")
+                        print("1. Eliminar Empleado(os) Asignados a la Sucursal")
+                        print("2. Reasignar Empleado(os) a otra Sucursal")
+                        opcion = int(input(Fore.LIGHTCYAN_EX + "Por favor, seleccione una opción : "))  
+                        if opcion == 1:
+                            EmpleadoController().eliminarEmpleadoPorSucursal(s_id)
+                            print(Fore.GREEN + "ELIMINACION COMPLETADA CON ÉXITO!")
+                            system("pause")
+                            break
+                        elif opcion == 2:
+                            print("Redirigiendo a Menú Asignaciones...")
+                            system("pause")
+                            self.gestionAsignaciones()
+                    except:
+                        print(Fore.RED + "Se debe Digitar 1 o 2")
+                        system("pause")
+            
+            system("cls")        
+            confirmacion = input(Fore.LIGHTRED_EX + f"¿ESTÁ SEGURO DE ELIMINAR LA SUCURSAL CON ID {s_id}?  Y. Si  N. No : ").upper()
             if confirmacion == "Y":
                 SucursalController().eliminarSucursal(s_id)
                 print(Fore.GREEN + "SUCURSAL ELIMINADA CON ÉXITO")
+                print(Fore.LIGHTCYAN_EX + "Volviendo al Menú Sucursales...")
                 system("pause")
                 self.__gestionSucursales()
             else:

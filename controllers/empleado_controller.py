@@ -51,6 +51,16 @@ class EmpleadoController:
             print("Error al buscar empleado")
             
             
+    def buscarEmpleadoPorSucursal(self, s_id:int):
+        try:
+            sql = "SELECT * FROM EMPLEADOS WHERE s_id = %s"
+            self.__dao.cursor.execute(sql, (s_id))
+            empleado = self.__dao.cursor.fetchone()
+            return empleado
+        except:
+            print("Error al buscar empleado")        
+            
+            
     def buscarEmpleadoPorRut(self, rut:str):
         try:
             sql = "SELECT RUT, S_ID FROM EMPLEADOS WHERE rut = %s"
@@ -76,7 +86,20 @@ class EmpleadoController:
             raise Exception(e)
         finally:
             self.__dao.desconectar()
-    
+            
+    def eliminarEmpleadoPorSucursal(self, s_id:int):
+        try:
+            empleado = self.buscarEmpleadoPorSucursal(s_id)
+            if not empleado:
+                raise Exception(Fore.RED + "¡EMPLEADO NO EXISTE!")
+                
+            sql = "UPDATE EMPLEADOS SET es_id = 2 WHERE s_id = %s" #%s = dato dinamico   
+            self.__dao.cursor.execute(sql, (s_id))
+            self.__dao.connection.commit()
+        except Exception as e:
+            raise Exception(e)
+        finally:
+            self.__dao.desconectar()
     
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
                           telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
