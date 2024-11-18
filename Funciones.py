@@ -792,4 +792,8 @@ class Funciones:
                 
         except Exception as e:
             console.print(f"[bold white]Error en la solicitud: [bold red]{e}")
+            volver = console.input("[bold white]Presione una tecla para continuar...")
+            redirigir("Volviendo a Menu Administrador")
+            self.menuMesaAyudaAdmin()
+            
             
