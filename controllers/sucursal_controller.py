@@ -20,8 +20,6 @@ class SucursalController:
             return id_sucursal
         except:
             raise Exception("Ocurrio un error al crear la sucursal, intente nuevamente")
-        finally:
-            self.__dao.desconectar()
             
             
     def listarSucursales(self):
@@ -32,8 +30,6 @@ class SucursalController:
             return response
         except:
             print("Ocurrió un error al buscar los datos")
-        finally:
-            self.__dao.desconectar()
     
     
     def buscarSucursalID(self, s_id:int):
@@ -65,8 +61,6 @@ class SucursalController:
             
         except Exception as e:
             print("Error al modificar la sucursal", e)
-        finally:
-            self.__dao.desconectar()
             
             
     
