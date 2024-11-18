@@ -9,16 +9,12 @@ from utils.mensajes import MENSAJES, redirigir, reintentar
 from colorama import Fore,init
 init(autoreset=True)
 from os import system
-from beautifultable import BeautifulTable
 import os
 from getpass import getpass
-
 
 from rich.console import Console
 from rich.table import Table
 from rich import box
-import time
-from rich.prompt import Prompt
 
 
 class Funciones:
@@ -199,6 +195,7 @@ class Funciones:
             console.rule(title="[cyan]CREAR EMPLEADO", style="bold yellow")
             rut, nombres, ape_paterno, ape_materno, telefono, correo = DatosPersona().obtenerDatosPersona()
             experiencia, inicio_contrato, salario = DatosEmpleado().obtenerDatosEmpleado()
+            redirigir("Mostrando Sucursales disponibles para Asignar...")
             self.listarSucursales(True)
             while True:
                 try:
@@ -271,6 +268,7 @@ class Funciones:
         try:
             while True:
                 system("cls")
+                redirigir("Mostrando Empleados disponibles para Eliminar...")
                 self.listarEmpleados(True)
                 console = self.console80
                 console.rule(title="[cyan]ELIMINAR EMPLEADO", style="bold yellow")
@@ -315,6 +313,7 @@ class Funciones:
             try:
                 while True:
                     system("cls")
+                    redirigir("Mostrando Empleados disponibles para Modificar...")
                     self.listarEmpleados(True)
                     console = self.console80
                     console.rule("[cyan]MODIFICAR EMPLEADO", style="bold yellow")
@@ -442,7 +441,7 @@ class Funciones:
             
             if not e:
                 if self.__perfilID == 1:
-                    redirigir("Volviendo a menu Gestion Sucursales...")
+                    redirigir("Volviendo a menu Gestión Sucursales...")
                     self.__gestionSucursales()
                 else:
                     redirigir("Volviendo a Menu Supervisor...")
@@ -477,7 +476,7 @@ class Funciones:
             
             empleadosEnSucursal = EmpleadoController().buscarEmpleadoPorSucursal(s_id)
             if empleadosEnSucursal:
-                redirigir(f"Mostrando Empleados disponibles en Sucursal con ID {s_id}...")
+                redirigir(f"Mostrando Empleados asociados a Sucursal con ID {s_id}...")
                 self.listarEmpleadosPorSucursal(empleadosEnSucursal, s_id)
                 while True:
                     try:
@@ -497,8 +496,16 @@ class Funciones:
                                     EmpleadoController().eliminarEmpleadoPorSucursal(s_id)
                                     SucursalController().eliminarSucursal(s_id)
                                     print(Fore.GREEN + "¡Eliminación completada con Éxito!")
-                                    redirigir("Volviedo a menu Gestion Sucursales...")
-                                    return self.__gestionSucursales()
+                                    while True:
+                                        seguir = console.input("[bold white]¿Desea eliminar otra sucursal? [bold yellow](S/N): ").strip().upper()
+                                        if seguir == 'S':
+                                            redirigir("Volviendo a opcion Eliminar Sucursal...")
+                                            return self.eliminarSucursal()
+                                        elif seguir == "N":
+                                            redirigir("Volviendo a menu Gestión Sucursales...")
+                                            return self.__gestionSucursales()
+                                        else:
+                                            print(MENSAJES["error"])
                                 else:
                                     print(MENSAJES["error"])
                         elif opcion == 2:
@@ -515,8 +522,16 @@ class Funciones:
                     if confirmacion == "S":
                         SucursalController().eliminarSucursal(s_id)
                         print(Fore.GREEN + "¡Eliminación completada con Éxito!")
-                        redirigir("Volviedo a menu Gestion Sucursales...")
-                        return self.__gestionSucursales()
+                        while True:
+                            opcion = console.input("[bold white]¿Desea eliminar otra sucursal? [bold yellow](S/N): ").strip().upper()
+                            if opcion == 'S':
+                                redirigir("Volviendo a opcion Eliminar Sucursal...")
+                                return self.eliminarSucursal()
+                            elif opcion == "N":
+                                redirigir("Volviendo a menu Gestión Sucursales...")
+                                return self.__gestionSucursales()
+                            else:
+                                print(MENSAJES["error"])
                     elif confirmacion == "N":
                         redirigir("Volviedo a menu Gestion Sucursales...")
                         return self.__gestionSucursales()
@@ -532,7 +547,7 @@ class Funciones:
         try:
             system("cls")
             console = self.console
-            table = Table(title=f"[cyan]EMPLEADOS ASIGNADOS A LA SUCURSAL CON ID {s_id}", style="bold yellow")
+            table = Table(title=f"[cyan]EMPLEADOS ASOCIADOS A LA SUCURSAL CON ID {s_id}", style="bold yellow")
             columnas = ["ID","RUT", "NOMBRES", "APELLIDOS", "TELEFONO", "CORREO", "ID SUCURSAL"]
     
             for columna in columnas:
@@ -577,7 +592,7 @@ class Funciones:
                         return self.modificarSucursal()
                     elif confirmacion == "N":
                         redirigir("Volviendo a menu Gestión Sucursales...")
-                        return self.__gestionEmpleados()
+                        return self.__gestionSucursales()
                     else:
                         print(MENSAJES["error"])
 

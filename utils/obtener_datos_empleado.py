@@ -25,7 +25,7 @@ class DatosEmpleado:
                     raise Exception
                 
             try:
-                experiencia = int(console.input("[bold cyan]EXPERIENCIA (en años): "))
+                experiencia = int(console.input("[bold cyan]Experiencia (en años): "))
                 if experiencia < 0 or experiencia > 50:
                     print(Fore.RED + "La experiencia debe ser un valor entre 0 y 50 años.")
                     error = True
@@ -43,7 +43,7 @@ class DatosEmpleado:
                 if not reintentar():
                     raise Exception
                 
-            fecha_contrato = console.input("[bold cyan]FECHA INICIO CONTRATO (YYYY-MM-DD): ").strip()
+            fecha_contrato = console.input("[bold cyan]Fecha inicio contrato (YYYY-MM-DD): ").strip()
             try:
                 datetime.strptime(fecha_contrato, "%Y-%m-%d")
                 return fecha_contrato
@@ -60,7 +60,7 @@ class DatosEmpleado:
                     raise Exception
                 
             try:
-                salario = int(console.input("[bold cyan]SALARIO (clp): $"))
+                salario = int(console.input("[bold cyan]Salario (clp): $"))
                 if salario < 0:
                     print(Fore.RED + "Debe ingresar un salario valido")
                     error = True
