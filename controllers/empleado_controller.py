@@ -15,7 +15,7 @@ class EmpleadoController:
         try:
             empleadoEnDB = self.buscarEmpleado(rut, telefono, correo)
             if empleadoEnDB:
-                raise Exception(Fore.RED + "¡Empleado ya se encuentra registrado!")
+                raise Exception(Fore.RED + "¡Empleado ya se encuentra registrado con Rut, Telefono o Correo!")
 
             empleado = Empleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
             sql = "INSERT INTO EMPLEADOS (RUT, NOMBRES, APE_PATERNO, APE_MATERNO, TELEFONO, CORREO, EXPERIENCIA, INICIO_CON, SALARIO, S_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -75,6 +75,7 @@ class EmpleadoController:
             self.__dao.connection.commit()
         except:
             raise Exception("Error al eliminar empleado")
+        
             
     def eliminarEmpleadoPorSucursal(self, s_id:int):
         try:

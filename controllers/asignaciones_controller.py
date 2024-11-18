@@ -16,8 +16,6 @@ class AsignacionesController:
             return response
         except:
             print(Fore.RED + "Ocurrio un error al buscar los datos")
-        finally:
-            self.__dao.desconectar()
             
             
     def reasignarEmpleado(self, rut:str, s_id:int, empleado):
@@ -31,5 +29,3 @@ class AsignacionesController:
             self.__dao.connection.commit()
         except Exception as e:
             raise Exception(e)
-        finally:
-            self.__dao.desconectar()

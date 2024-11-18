@@ -742,8 +742,10 @@ class Funciones:
                         print(MENSAJES["error"])
         except Exception as e:
             print(e)
-            system("pause")
-            return self.gestionAsignaciones()
+            if not reintentar():
+                redirigir("Volviendo a menu Gestion Asignaciones")
+                return self.gestionAsignaciones()
+            return self.reasignarEmpleado()
                    
         
     def salirPrograma(self):
