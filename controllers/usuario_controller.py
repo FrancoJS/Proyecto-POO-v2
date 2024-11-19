@@ -9,26 +9,36 @@ class UsuarioController:
         self.__dao = DAO()
     
     
-    def registroUsuarios(self, rut: str, nombres: str, ape_paterno: str, ape_materno: str, telefono: int, correo: str, clave: str, p_id: int):
+    def registroUsuarios(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, clave:str, p_id:int):
         try:
-            if self.buscarUsuario(rut):
-                print(Fore.RED + f"¡El RUT '{rut}' ya está registrado en el sistema!")
-                return
+            if self.__usuarioExiste(rut, telefono, correo):
+                raise Exception(f"¡Ya existe un Usuario con Rut, Telefono o Correo proporcionados!")
             usuario = Usuario(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, p_id)
 
-            sql = "INSERT INTO USUARIOS (RUT, NOMBRES, APE_PATERNO, APE_MATERNO, TELEFONO, CORREO, CLAVE, p_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            sql = "INSERT INTO USUARIOS (RUT, NOMBRES, APE_PATERNO, APE_MATERNO, TELEFONO, CORREO, CLAVE, P_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             values = (usuario.rut, usuario.nombres, usuario.ape_paterno, usuario.ape_materno, usuario.telefono, usuario.correo, usuario.clave, usuario.p_id)
 
             self.__dao.cursor.execute(sql, values)
             self.__dao.connection.commit()
-            print(Fore.GREEN + "¡Usuario creado exitosamente!")
 
         except Exception as e:
-            print(Fore.RED + f"Error al registrar usuario: {e}")
-            raise
+            raise Exception(e)
+        
+    def __usuarioExiste(self, rut:str, telefono:int, correo:str):
+        try:
+            sql = "SELECT RUT FROM USUARIOS WHERE rut = %s OR telefono = %s OR correo = %s"
+            values = (rut, telefono, correo)
+            self.__dao.cursor.execute(sql, values)
+            usuario = self.__dao.cursor.fetchone()
+            if usuario:
+                return True
+            
+            return False
+        except:
+            raise Exception(f"Error al verificar el usuario")
 
         
-    def buscarUsuario(self, rut:str, clave:str = None) -> bool:
+    def validarCredenciales(self, rut:str, clave:str) -> bool:
         try:
             sql = "SELECT rut, clave, p_id FROM USUARIOS WHERE rut = %s"
             self.__dao.cursor.execute(sql, (rut,))
@@ -43,6 +53,6 @@ class UsuarioController:
 
             return usuario[2] if clave else True
             
-        except Exception as e:
-            print("Se Falló en la busqueda del Usuario en la Base de Datos")
-            return False
+        except:
+            raise Exception("Se Falló en la busqueda del Usuario en la Base de Datos")
+            

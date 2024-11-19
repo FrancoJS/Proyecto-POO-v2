@@ -5,8 +5,9 @@ from controllers.asignaciones_controller import AsignacionesController
 from utils.obtener_datos_persona import DatosPersona
 from utils.obtener_datos_sucursal import DatosSucursal
 from utils.obtener_datos_empleado import DatosEmpleado
-from utils.mensajes import MENSAJES, redirigir, reintentar
+from utils.mensajes_templates import MENSAJES, redirigir, reintentar
 from utils.get_data_json import obtenerBecasAPI
+from utils.password_service import obtenerClave
 from colorama import Fore,init
 init(autoreset=True)
 from os import system
@@ -60,36 +61,51 @@ class Funciones:
             system("pause")
             self.menuPrincipal()
     
+    
     def registroUsuarios(self):
-        try:
-            usuario_controller = self.__usuario_controller
-            console = self.console80
-            system("cls")
-            console.rule("[cyan] REGISTRO DE USUARIO", style="bold yellow")
-
-            rut, nombres, ape_paterno, ape_materno, telefono, correo, clave = self.__datos_persona.obtenerDatosPersona()
-
-            p_id = console.input("[bold cyan]Ingrese tipo de usuario [1. Administrador || 2. Supervisor] : ").strip()
-            if not p_id.isdigit():
-                print(Fore.RED + "El tipo de usuario debe ser un número.")
-                system("pause")
+        while True:
+            try:
+                usuario_controller = self.__usuario_controller
+                console = self.console80
+                system("cls")
+                console.rule("[cyan]REGISTRO DE USUARIO", style="bold yellow")
+                rut, nombres, ape_paterno, ape_materno, telefono, correo = self.__datos_persona.obtenerDatosPersona()
+                clave = obtenerClave(console)
+                while True:
+                    try:
+                        p_id = int(console.input("[bold cyan]Ingrese tipo de usuario [1. Administrador || 2. Supervisor]: "))
+                        if p_id == 1 or p_id == 2:
+                            break
+                        else:
+                            raise Exception            
+                    except Exception as e:
+                        MENSAJES["error"]
+                        if not reintentar():
+                            redirigir("Volviendo a Menu Principal...")
+                            self.menuPrincipal()
+                try:
+                    usuario_controller.registroUsuarios(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, p_id)
+                    console.print("[bold green]¡Usuario registrado Exitosamente!")
+                    self.__perfilID = p_id
+                    
+                    if self.__perfilID == 1:
+                        redirigir("Redirigiendo a Menu De Administrador...")
+                        return self.menuMesaAyudaAdmin()
+                    elif self.__perfilID == 2:
+                        redirigir("Redirigiendo a Menu De Supervisor...")
+                        return self.menuMesaAyudaSupervisor()
+                except Exception as e:
+                    console.print(f"[bold red]{e}")
+                    if not reintentar():
+                        redirigir("Volviendo Menu Principal...")
+                        return self.menuPrincipal()
+                    
+                    redirigir("Volviendo a opcion Registrar...")
+                    
+            except Exception as e:
+                redirigir("Volviendo Menu Principal...")
                 return self.menuPrincipal()
-            p_id = int(p_id)
-            if p_id == 1 or p_id == 2:
-                usuario_controller.registroUsuarios(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, int(p_id))
-            else:
-                print(Fore.RED + "El tipo de usuario no existe")
-                system("pause")
-                self.menuPrincipal()
-                raise
-
-
-            system("pause")
-            self.menuPrincipal()
-        except Exception as e:
-            console.print(Fore.RED + f"Error al registrar usuario: {e}")
-            system("pause")
-            self.menuPrincipal()
+                
     
     def iniciarSesion(self):
         try:
@@ -98,11 +114,9 @@ class Funciones:
             console.rule("[cyan]INICIO DE SESIÓN", style="bold yellow")
             rut = self.__datos_persona.obtenerRut()
             con = getpass("Contraseña: ")
-            response = self.__usuario_controller.buscarUsuario(rut, con)
+            response = self.__usuario_controller.validarCredenciales(rut, con)
             if not response:
-                print(Fore.RED + "¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
-                system("pause")
-                raise Exception
+                raise Exception("¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
             
             self.__perfilID = response
             console.print("[bold green]¡Inicio de Sesión Exitoso!")
@@ -113,7 +127,9 @@ class Funciones:
             elif self.__perfilID == 2:
                 redirigir("Redirigiendo a Menu De Supervisor...")
                 return self.menuMesaAyudaSupervisor()
-        except:
+        except Exception as e:
+            console.print(f"[bold red]{e}")
+            system("pause")
             redirigir("Volviendo a Menu Principal...")
             return self.menuPrincipal()
         

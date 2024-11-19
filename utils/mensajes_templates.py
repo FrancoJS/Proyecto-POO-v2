@@ -11,7 +11,7 @@ console = Console()
 
 def redirigir(mensaje):
     with console.status(f"[bold yellow]{mensaje}", spinner="dots"):
-        time.sleep(1)
+        time.sleep(1.2)
     
 def reintentar(): 
     while True:
