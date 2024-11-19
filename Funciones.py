@@ -40,15 +40,18 @@ class Funciones:
             table = Table(title="[cyan]MENU PRINCIPAL", style="bold yellow", box=box.ROUNDED)
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
-            table.add_row("1", "Iniciar Sesión")
-            table.add_row("2", "Salir")
+            table.add_row("1", "Registrar Usuario")
+            table.add_row("2", "Iniciar Sesión")
+            table.add_row("3", "Salir")
             console.print(table)
 
             opcion = int(console.input("[bold white]Digite una opción: [/bold white]"))
         
             if opcion == 1:
-                return self.iniciarSesion()
+                return self.registroUsuarios()
             elif opcion == 2:
+                return self.iniciarSesion()
+            elif opcion == 3:
                 return self.salirPrograma()
             else:
                 raise Exception 
@@ -57,6 +60,36 @@ class Funciones:
             system("pause")
             self.menuPrincipal()
     
+    def registroUsuarios(self):
+        try:
+            usuario_controller = self.__usuario_controller
+            console = self.console80
+            system("cls")
+            console.rule("[cyan] REGISTRO DE USUARIO", style="bold yellow")
+
+            rut, nombres, ape_paterno, ape_materno, telefono, correo, clave = self.__datos_persona.obtenerDatosPersona()
+
+            p_id = console.input("[bold cyan]Ingrese tipo de usuario [1. Administrador || 2. Supervisor] : ").strip()
+            if not p_id.isdigit():
+                print(Fore.RED + "El tipo de usuario debe ser un número.")
+                system("pause")
+                return self.menuPrincipal()
+            p_id = int(p_id)
+            if p_id == 1 or p_id == 2:
+                usuario_controller.registroUsuarios(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, int(p_id))
+            else:
+                print(Fore.RED + "El tipo de usuario no existe")
+                system("pause")
+                self.menuPrincipal()
+                raise
+
+
+            system("pause")
+            self.menuPrincipal()
+        except Exception as e:
+            console.print(Fore.RED + f"Error al registrar usuario: {e}")
+            system("pause")
+            self.menuPrincipal()
     
     def iniciarSesion(self):
         try:
