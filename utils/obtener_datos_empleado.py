@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 from colorama import Fore
 from rich.console import Console
-from utils.mensajes import reintentar
+from utils.mensajes_templates import reintentar
 
 
 class DatosEmpleado: 
@@ -61,8 +61,8 @@ class DatosEmpleado:
                 
             try:
                 salario = int(console.input("[bold cyan]Salario (clp): $"))
-                if salario < 0:
-                    print(Fore.RED + "Debe ingresar un salario valido")
+                if salario < 500000 or salario > 300000000:
+                    print(Fore.RED + "Debe ingresar un salario valido entre $500.000 y $30.000.000")
                     error = True
                     continue
                 return salario

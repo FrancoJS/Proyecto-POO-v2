@@ -2,7 +2,7 @@ from datetime import datetime
 import re
 from colorama import Fore
 from rich.console import Console
-from utils.mensajes import reintentar
+from utils.mensajes_templates import reintentar
 
 class DatosSucursal:
     
@@ -68,3 +68,20 @@ class DatosSucursal:
             except ValueError:
                 print(Fore.RED + "Debe ingresar una fecha válida en el formato (YYYY-MM-DD).")
                 error = True
+
+
+    def obtenerIdSucursal(self, sucursal_cotroller):
+            console = self.console
+            while True:
+                try:
+                    sucursal_id = int(console.input("[bold cyan]Ingrese ID de Sucursal de Empleado: "))
+                    if sucursal_cotroller.buscarSucursalID(sucursal_id):
+                        return sucursal_id
+                    else:
+                        console.print("[bold red]¡Sucursal no existe!, [bold white]Ingrese un ID válido.")
+                        if not reintentar():
+                            raise Exception
+                except ValueError:
+                    print(Fore.RED + "¡ID de Sucursal inválido!")
+                except:
+                    raise Exception

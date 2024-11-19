@@ -1,5 +1,5 @@
 from colorama import Fore
-from utils.mensajes import reintentar
+from utils.mensajes_templates import reintentar
 import re
 
 def hashPassword():
@@ -24,25 +24,25 @@ def obtenerClave(console, error: bool = False) -> str:
                 error = True
                 continue
             
-            if not re.search(r"[A-Z]", clave):
-                print(Fore.RED + "La clave debe incluir al menos una letra mayúscula.")
-                error = True
-                continue
+            # if not re.search(r"[A-Z]", clave):
+            #     print(Fore.RED + "La clave debe incluir al menos una letra mayúscula.")
+            #     error = True
+            #     continue
             
-            if not re.search(r"[a-z]", clave):
-                print(Fore.RED + "La clave debe incluir al menos una letra minúscula.")
-                error = True
-                continue
+            # if not re.search(r"[a-z]", clave):
+            #     print(Fore.RED + "La clave debe incluir al menos una letra minúscula.")
+            #     error = True
+            #     continue
             
-            if not re.search(r"\d", clave):
-                print(Fore.RED + "La clave debe incluir al menos un número.")
-                error = True
-                continue
+            # if not re.search(r"\d", clave):
+            #     print(Fore.RED + "La clave debe incluir al menos un número.")
+            #     error = True
+            #     continue
             
-            if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", clave):
-                print(Fore.RED + "La clave debe incluir al menos un carácter especial (ej.: !@#$%^&*).")
-                error = True
-                continue
+            # if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", clave):
+            #     print(Fore.RED + "La clave debe incluir al menos un carácter especial (ej.: !@#$%^&*).")
+            #     error = True
+            #     continue
             
             
             return clave

@@ -37,8 +37,8 @@ class SucursalController:
             sql = "SELECT S_ID FROM SUCURSALES WHERE s_id = %s and es_id = 1"
             values = (s_id)
             self.__dao.cursor.execute(sql,values)
-            sucursal = self.__dao.cursor.fetchone()
-            return sucursal
+            sucursal_id = self.__dao.cursor.fetchone()
+            return sucursal_id
         except:
             print("Error al buscar al encontrar la sucursal")
             

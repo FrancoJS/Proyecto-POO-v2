@@ -3,7 +3,7 @@ import re
 from colorama import Fore
 from os import system
 from rich.console import Console
-from utils.mensajes import reintentar
+from utils.mensajes_templates import reintentar
 
 class DatosPersona:
     
@@ -33,7 +33,8 @@ class DatosPersona:
                 
             console.print("[bold white]Si el digito verificador de su rut es [bold yellow]'K'[/bold yellow] reemplacelo con 0")
             rut = console.input("[bold cyan]Rut: ").strip()
-                         
+                        
+            #Cambiar al momento de la presentacion el 2 a 8 para ruts validos
             if len(rut) < 2 or len(rut) > 12:
                 print(Fore.RED + "La longitud del RUT no es válida.")
                 error = True
@@ -53,7 +54,7 @@ class DatosPersona:
                 
             rut_validado = f"{numero}-{dv}"
             return rut_validado
-                
+                  
                 
     def __obtenerNombre(self, error:bool = False) -> str:
         console = self.console

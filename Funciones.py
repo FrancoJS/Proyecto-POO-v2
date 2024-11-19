@@ -5,8 +5,8 @@ from controllers.asignaciones_controller import AsignacionesController
 from utils.obtener_datos_persona import DatosPersona
 from utils.obtener_datos_sucursal import DatosSucursal
 from utils.obtener_datos_empleado import DatosEmpleado
-from utils.mensajes_templates import MENSAJES, redirigir, reintentar
-from utils.get_data_json import obtenerBecasAPI
+from utils.mensajes_templates import MENSAJES, redirigir, reintentar, mostrarConfirmacion
+from utils.get_data_api import obtenerBecasAPI
 from utils.password_service import obtenerClave
 from colorama import Fore,init
 init(autoreset=True)
@@ -129,7 +129,6 @@ class Funciones:
                 return self.menuMesaAyudaSupervisor()
         except Exception as e:
             console.print(f"[bold red]{e}")
-            system("pause")
             redirigir("Volviendo a Menu Principal...")
             return self.menuPrincipal()
         
@@ -260,34 +259,23 @@ class Funciones:
             console.rule(title="[cyan]CREAR EMPLEADO", style="bold yellow")
             rut, nombres, ape_paterno, ape_materno, telefono, correo = self.__datos_persona.obtenerDatosPersona()
             experiencia, inicio_contrato, salario = self.__datos_empleado.obtenerDatosEmpleado()
+            
             redirigir("Mostrando Sucursales disponibles para Asignar...")
             self.listarSucursales(True)
-            while True:
-                try:
-                    s_id = int(console.input("[bold cyan]Ingrese ID de Sucursal de Empleado: "))
-                    if s_id:
-                        s_idEnDB = sucursal_controller.buscarSucursalID(s_id)
-                        if s_idEnDB:
-                            break
-                        
-                        console.print("[bold red]¡Sucursal no existe!, [bold white]Ingrese un id de sucursal válido.")
-                        if not reintentar():
-                           redirigir("Volviendo a menu Gestión Empleados...")
-                           return self.__gestionEmpleados() 
-                except:
-                    print(Fore.RED + "¡ID de Sucursal es necesaria!")
+            s_id = self.__datos_sucursal.obtenerIdSucursal(sucursal_controller)
+            
             empleado_controller.crearEmpleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
             console.print("[bold green]¡Empleado creado exitosamente!")
-            while True:
-                confirmacion = console.input("[bold white]¿Desea agregar otro empleado? [bold yellow](S/N): ").strip().upper()
-                if confirmacion == 'S':
-                    redirigir("Volviendo a opcion Crear Empleado...")
-                    return self.crearEmpleado()
-                elif confirmacion == "N":
-                    redirigir("Volviendo a menu Gestión Empleados...")
-                    return self.__gestionEmpleados()
-                else:
-                    print(MENSAJES["error"])
+            
+            confirmacion = mostrarConfirmacion("¿Desea agregar otro Empleado?")
+
+            if not confirmacion:
+                redirigir("Volviendo a menu Gestión Empleados...")
+                return self.__gestionEmpleados()
+            else:
+                redirigir("Volviendo a opcion Crear Empleado...")
+                return self.crearEmpleado()
+
         except:
             redirigir("Volviendo a menu Gestión Empleados...")
             return self.__gestionEmpleados()
@@ -343,31 +331,28 @@ class Funciones:
                 empleado = empleado_controller.buscarEmpleadoPorRut(rut)
 
                 if not empleado:
-                    console.print("[bold red]¡Empleado no existe!, [bold white]Ingreselo uno válido.")
-                    
+                    console.print("[bold red]¡Empleado no existe!, [bold white]Ingreselo uno válido.")     
                     if not reintentar():
                         redirigir("Volviendo a menu Gestión Empleados...")
                         return self.__gestionEmpleados()
                     else:
                         continue
 
-                while True:
-                    confirmacion = console.input(f"[bold white]¿Esta seguro de eliminar al empleado con Rut [bold yellow]{rut}? (S/N): ").strip().upper()
-                    if confirmacion == "S":
-                        empleado_controller.eliminarEmpleado(rut)
-                        console.print("[bold green]¡Empleado eliminado Exitosamente!")
-                        opcion = console.input("[bold white]¿Desea eliminar otro empleado? [bold yellow](S/N): ").strip().upper()
-                        if opcion == "S":
-                            redirigir("Volviendo a opcion Eliminar Empleado...")
-                            break
-                        else:
-                            redirigir("Volviendo a menu Gestión Empleados...")
-                            return self.__gestionEmpleados()
-                    elif confirmacion == "N":
-                        redirigir("Volviendo a menu Gestión Empleados...")
-                        return self.__gestionEmpleados()
-                    else:
-                        print(MENSAJES["error"])
+                confirmacion = mostrarConfirmacion(f"¿Esta seguro de eliminar al empleado con Rut {rut}?")
+               
+                if not confirmacion:
+                    redirigir("Volviendo a menu Gestión Empleados...")
+                    return self.__gestionEmpleados()
+                
+                empleado_controller.eliminarEmpleado(rut)
+                console.print("[bold green]¡Empleado eliminado Exitosamente!")
+                confirmacion2 = mostrarConfirmacion("¿Desea eliminar otro empleado?") 
+                if not confirmacion2:
+                    redirigir("Volviendo a menu Gestión Empleados...")
+                    return self.__gestionEmpleados()
+                
+                redirigir("Volviendo a opcion Eliminar Empleado...")
+                  
         except:
             redirigir("Volviendo a menu Gestion Empleados...")
             return self.__gestionEmpleados()
@@ -604,7 +589,7 @@ class Funciones:
                     print(MENSAJES["error"])
             
         
-    def listarEmpleadosPorSucursal(self,empleados, s_id):
+    def listarEmpleadosPorSucursal(self, empleados, s_id):
         try:
             console = self.console
             system("cls")

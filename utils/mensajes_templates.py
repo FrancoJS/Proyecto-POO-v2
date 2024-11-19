@@ -23,4 +23,14 @@ def reintentar():
         else:
             print(MENSAJES["error"])
             system("pause")
-            
+
+def mostrarConfirmacion(mensaje):
+    while True:
+        confirmacion = console.input(f"[bold white]{mensaje} [bold yellow](S/N): ").strip().upper()
+        if confirmacion == 'S':
+            return True
+        elif confirmacion == "N":
+            return False
+        else:
+            print(MENSAJES["error"])
+    
