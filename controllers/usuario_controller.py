@@ -2,6 +2,7 @@ from database.dao import DAO
 from models.Usuario import Usuario
 from colorama import Fore, Style, init
 from os import system
+from utils.password_service import hashPassword, comparePassword
 
 class UsuarioController:
     
@@ -48,7 +49,7 @@ class UsuarioController:
             
             if clave:    
                 clave_en_DB = usuario[1]
-                if not clave == clave_en_DB:
+                if not comparePassword(clave, clave_en_DB):
                     return False
 
             return usuario[2] if clave else True
