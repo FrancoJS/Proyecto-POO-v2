@@ -1,13 +1,17 @@
 from colorama import Fore
 from utils.mensajes_templates import reintentar
 import re
-
-def hashPassword():
-    pass
+import bcrypt
 
 
-def comparePassword(password, hashedPasssword):
-    pass
+def hashPassword(password):
+    salt = bcrypt.gensalt()
+    hashedPassword = bcrypt.hashpw(password.encode("utf-8"), salt)
+    return hashedPassword.decode("utf-8")   
+
+
+def comparePassword(password, hashedPassword):
+    return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))
 
 
 def obtenerClave(console, error: bool = False) -> str:
