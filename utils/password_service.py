@@ -10,7 +10,7 @@ def hashPassword(password):
     return hashedPassword.decode("utf-8")   
 
 
-def comparePassword(password, hashedPasssword):
+def comparePassword(password, hashedPassword):
     return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))
 
 

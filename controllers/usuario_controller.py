@@ -14,7 +14,9 @@ class UsuarioController:
         try:
             if self.__usuarioExiste(rut, telefono, correo):
                 raise Exception(f"¡Ya existe un Usuario con Rut, Telefono o Correo proporcionados!")
-            usuario = Usuario(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, p_id)
+            
+            clave_hashed = hashPassword(clave)
+            usuario = Usuario(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave_hashed, p_id)
 
             sql = "INSERT INTO USUARIOS (RUT, NOMBRES, APE_PATERNO, APE_MATERNO, TELEFONO, CORREO, CLAVE, P_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
             values = (usuario.rut, usuario.nombres, usuario.ape_paterno, usuario.ape_materno, usuario.telefono, usuario.correo, usuario.clave, usuario.p_id)
@@ -54,6 +56,7 @@ class UsuarioController:
 
             return usuario[2] if clave else True
             
-        except:
+        except Exception as e:
+            print(e)
             raise Exception("Se Falló en la busqueda del Usuario en la Base de Datos")
             
