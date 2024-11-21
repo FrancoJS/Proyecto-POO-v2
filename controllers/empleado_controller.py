@@ -46,6 +46,16 @@ class EmpleadoController:
         except:
             print("Error al buscar empleado")
             
+    def buscarEmpleadoModificar(self, rut:str, telefono:int, correo:str, e_id:int):
+        try:
+            sql = "SELECT * FROM EMPLEADOS WHERE (rut = %s or telefono = %s or correo = %s) and e_id != %s and es_id = 1"
+            values = (rut, telefono, correo, e_id)
+            self.__dao.cursor.execute(sql, values)
+            empleado = self.__dao.cursor.fetchone()
+            return empleado
+        except:
+            print("Error al buscar empleado")
+            
             
     def buscarEmpleadoPorSucursal(self, s_id:int):
         try:
@@ -93,7 +103,7 @@ class EmpleadoController:
     def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
                           telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
         try:
-            empleado = self.buscarEmpleado(rut, telefono, correo)
+            empleado = self.buscarEmpleadoModificar(rut, telefono, correo, e_id)
             
             if empleado:
                 raise Exception(Fore.RED + "¡Ya existen Empleados registrados con el Rut, Telefono o Correo proporcionados!")

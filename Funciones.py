@@ -17,6 +17,7 @@ from getpass import getpass
 from rich.console import Console
 from rich.table import Table
 from rich import box
+from rich.prompt import Prompt
 
 
 class Funciones:
@@ -46,7 +47,7 @@ class Funciones:
             table.add_row("3", "Salir")
             console.print(table)
 
-            opcion = int(console.input("[bold white]Digite una opción: [/bold white]"))
+            opcion:int = int(console.input("[bold white]Digite una opción: [/bold white]"))
         
             if opcion == 1:
                 return self.registroUsuarios()
@@ -73,7 +74,7 @@ class Funciones:
                 clave = obtenerClave(console)
                 while True:
                     try:
-                        p_id = int(console.input("[bold cyan]Ingrese tipo de usuario [1. Administrador || 2. Supervisor]: "))
+                        p_id = int(console.input("[bold cyan]Ingrese tipo de usuario (1. Administrador || 2. Supervisor): "))
                         if p_id == 1 or p_id == 2:
                             break
                         else:
@@ -113,8 +114,8 @@ class Funciones:
             system("cls")
             console.rule("[cyan]INICIO DE SESIÓN", style="bold yellow")
             rut = self.__datos_persona.obtenerRut()
-            con = getpass("Contraseña: ")
-            response = self.__usuario_controller.validarCredenciales(rut, con)
+            clave = obtenerClave(console, inicioSesion=True)
+            response = self.__usuario_controller.validarCredenciales(rut, clave)
             if not response:
                 raise Exception("¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
             
@@ -222,9 +223,9 @@ class Funciones:
             table = Table(title="[cyan]GESTIONAR EMPLEADOS", style="bold yellow", box=box.ROUNDED)
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
-            table.add_row("1", "Crear Empleado")
+            table.add_row("1", "Agregar Empleado")
             table.add_row("2", "Listar Empleados")
-            table.add_row("3", "Modificar Empleados")
+            table.add_row("3", "Modificar Empleado")
             table.add_row("4", "Eliminar Empleado")
             table.add_row("5", "Volver")
             console.print(table)
@@ -254,6 +255,11 @@ class Funciones:
         try:
             empleado_controller = self.__empleado_controller
             sucursal_controller = self.__sucursal_controller
+            datos_sucursales = self.__sucursal_controller.listarSucursales()
+            if not datos_sucursales:
+                print(Fore.RED + "¡No existen sucursales creadas, porfavor agregue una sucursal primero para poder agregar un Empleado!")
+                system("pause")
+                return self.__gestionEmpleados()
             console = self.console80
             system("cls")
             console.rule(title="[cyan]CREAR EMPLEADO", style="bold yellow")
@@ -281,7 +287,7 @@ class Funciones:
             return self.__gestionEmpleados()
             
         
-    def listarEmpleados(self, e:bool = False):
+    def listarEmpleados(self, e:bool = False, asignaciones:bool = False):   
         try:
             empleado_controller = self.__empleado_controller
             empleados = empleado_controller.listarEmpleados()
@@ -289,6 +295,10 @@ class Funciones:
             if not empleados:
                 print(Fore.RED + "¡No se encontraron empleados registrados!")
                 system("pause")
+                if asignaciones:
+                    redirigir("Volviendo a menu Gestion Asignaciones...")
+                    return self.gestionAsignaciones()
+                
                 if self.__perfilID == 1:
                     return self.__gestionEmpleados()
                 else:
@@ -368,7 +378,7 @@ class Funciones:
                 self.listarEmpleados(True)
                 console.rule("[cyan]MODIFICAR EMPLEADO", style="bold yellow")
                 try:
-                    e_id = int(console.input("[cyan]Ingrese ID de Empleado: "))
+                    e_id = int(console.input("[bold cyan]Ingrese ID de Empleado: "))
                     if not empleado_controller.verificarE_ID(e_id):
                         print(Fore.RED + "El ID ingresado no es valido.")
                         if not reintentar():
@@ -412,7 +422,7 @@ class Funciones:
             table = Table(title="[cyan]MENU SUCURSALES[cyan]", style="bold yellow")
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
-            table.add_row("1", "Crear Sucursal")
+            table.add_row("1", "Agregar Sucursal")
             table.add_row("2", "Listar Sucursales")
             table.add_row("3", "Modificar Sucursales")
             table.add_row("4", "Eliminar Sucursal")
@@ -508,12 +518,12 @@ class Funciones:
             self.listarSucursales(True)
             console.rule(title="[cyan]ELIMINAR SUCURSAL", style="bold yellow")
             try:
-                s_id = int(console.input("[cyan]Ingrese ID de Sucursal: "))
+                s_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
                 if s_id:
                     s_idEnDB = sucursal_controller.buscarSucursalID(s_id)
                     if s_idEnDB:
                         break
-                    console.print("[bold red]¡Sucursal no Existe!, [bold white]Ingrese un ID de Sucursal valido.")
+                    console.print("[bold red]¡Sucursal no Existe!, Ingrese un ID de Sucursal valido.")
                     if not reintentar():
                         redirigir("Volviendo a menu Gestión Sucursales...")
                         self.__gestionSucursales()
@@ -620,12 +630,12 @@ class Funciones:
             console.rule(title="[cyan]MODIFICAR SUCURSAL", style="bold yellow")
 
             try:
-                s_id = int(console.input("[cyan]Ingrese ID de Sucursal: "))
+                s_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
                 if s_id:
                     s_idEnDB = sucursal_controller.buscarSucursalID(s_id)
                     if s_idEnDB:
                         break
-                    console.print("[bold red]¡Sucursal no Existe!, [bold white]Ingrese un ID de Sucursal valido.")
+                    console.print("[bold red]¡Sucursal no Existe!, Ingrese un ID de Sucursal valido.")
                     if not reintentar():
                         redirigir("Volviendo a menu Gestión Sucursales...")
                         self.__gestionSucursales()
@@ -671,7 +681,7 @@ class Funciones:
             table.add_row("3", "Volver")
             console.print(table)
             
-            opcion = int(input("Digite opción: "))
+            opcion = int(console.input("[bold white]Digite opción: "))
             if opcion == 1: 
                 return self.listarAsignaciones()
                 
@@ -730,7 +740,7 @@ class Funciones:
                 asignaciones_controller = self.__asignaciones_controller
                 system("cls")
                 redirigir("Mostrando Empleados disponibles para Reasignación...")
-                self.listarEmpleados(True)
+                self.listarEmpleados(True, asignaciones=True)
                 console = self.console80
                 console.rule(title="[cyan]REASIGNAR EMPLEADO", style="bold yellow")
                 console.print("[bold white]Ingrese RUT de Empleado y Sucursal a la que desea reasignar")

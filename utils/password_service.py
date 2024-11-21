@@ -2,6 +2,7 @@ from colorama import Fore
 from utils.mensajes_templates import reintentar
 import re
 import bcrypt
+from rich.prompt import Prompt
 
 
 def hashPassword(password):
@@ -14,19 +15,29 @@ def comparePassword(password, hashedPassword):
     return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))
 
 
-def obtenerClave(console, error: bool = False) -> str:
+def obtenerClave(console, error: bool = False, inicioSesion: bool = False) -> str:
         console = console
         while True:
             if error:
                 if not reintentar():
                     raise Exception
 
-            clave = console.input("[bold cyan]Clave: ").strip()
-
+            clave = Prompt.ask("[bold cyan]Clave", password=True).strip()
+            
             if len(clave) < 8 or len(clave) > 20:
                 print(Fore.RED + "La clave debe tener entre 8 y 20 caracteres.")
                 error = True
                 continue
+            
+            if not inicioSesion:
+                confirmacion = Prompt.ask("[bold cyan]Confirmar clave", password=True).strip()
+
+                if clave != confirmacion:
+                    print(Fore.RED + "Las claves no coinciden. Por favor, inténtelo de nuevo.")
+                    error = True
+                    continue
+
+            return clave
             
             # if not re.search(r"[A-Z]", clave):
             #     print(Fore.RED + "La clave debe incluir al menos una letra mayúscula.")
@@ -49,4 +60,4 @@ def obtenerClave(console, error: bool = False) -> str:
             #     continue
             
             
-            return clave
+

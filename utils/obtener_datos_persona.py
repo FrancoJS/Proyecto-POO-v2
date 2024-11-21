@@ -35,7 +35,7 @@ class DatosPersona:
             rut = console.input("[bold cyan]Rut: ").strip()
                         
             #Cambiar al momento de la presentacion el 2 a 8 para ruts validos
-            if len(rut) < 2 or len(rut) > 12:
+            if len(rut) < 8 or len(rut) > 12:
                 print(Fore.RED + "La longitud del RUT no es válida.")
                 error = True
                 continue

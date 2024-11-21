@@ -1,7 +1,5 @@
 from database.dao import DAO
 from models.Usuario import Usuario
-from colorama import Fore, Style, init
-from os import system
 from utils.password_service import hashPassword, comparePassword
 
 class UsuarioController:

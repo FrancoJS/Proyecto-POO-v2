@@ -23,7 +23,7 @@ class DatosSucursal:
                 if not reintentar():
                     raise Exception
                 
-            nombre = console.input("[cyan]Nombre Sucursal: ").strip()
+            nombre = console.input("[bold cyan]Nombre Sucursal: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s]+$", nombre):
                 print(Fore.RED + "El nombre de la sucursal solo debe contener caracteres alfanuméricos y espacios.")
                 error = True
@@ -42,7 +42,7 @@ class DatosSucursal:
                 if not reintentar():
                     raise Exception
                 
-            direccion = console.input("[cyan]Dirección Sucursal: ").strip()
+            direccion = console.input("[bold cyan]Dirección Sucursal: ").strip()
             if not re.match("^[A-Za-z0-9áéíóúÁÉÍÓÚñÑ\s#.,-]+$", direccion):
                 print(Fore.RED + "La dirección contiene caracteres no permitidos.")
                 error = True
@@ -61,7 +61,7 @@ class DatosSucursal:
                 if not reintentar():
                     raise Exception
                 
-            fecha_constitucion = console.input("[cyan]Fecha Constitución (YYYY-MM-DD): ").strip()
+            fecha_constitucion = console.input("[bold cyan]Fecha Constitución (YYYY-MM-DD): ").strip()
             try:
                 fecha = datetime.strptime(fecha_constitucion, "%Y-%m-%d")
                 return fecha
@@ -74,7 +74,7 @@ class DatosSucursal:
             console = self.console
             while True:
                 try:
-                    sucursal_id = int(console.input("[bold cyan]Ingrese ID de Sucursal de Empleado: "))
+                    sucursal_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
                     if sucursal_cotroller.buscarSucursalID(sucursal_id):
                         return sucursal_id
                     else:
