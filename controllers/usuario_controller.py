@@ -10,7 +10,6 @@ class UsuarioController:
     
     def registroUsuarios(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, clave:str, p_id:int):
         try:
-            self.__dao.conectar()
             if self.__usuarioExiste(rut, telefono, correo):
                 raise Exception(f"¡Ya existe un Usuario con Rut, Telefono o Correo proporcionados!")
             
@@ -25,12 +24,9 @@ class UsuarioController:
 
         except Exception as e:
             raise Exception(e)
-        finally:
-            self.__dao.desconectar()
         
     def __usuarioExiste(self, rut:str, telefono:int, correo:str):
         try:
-            self.__dao.conectar()
             sql = "SELECT RUT FROM USUARIOS WHERE rut = %s OR telefono = %s OR correo = %s"
             values = (rut, telefono, correo)
             self.__dao.cursor.execute(sql, values)
@@ -41,13 +37,10 @@ class UsuarioController:
             return False
         except:
             raise Exception(f"Error al verificar el usuario")
-        finally:
-            self.__dao.desconectar()
 
         
     def validarCredenciales(self, rut:str, clave:str) -> bool:
         try:
-            self.__dao.conectar()
             sql = "SELECT rut, clave, p_id FROM USUARIOS WHERE rut = %s"
             self.__dao.cursor.execute(sql, (rut,))
             usuario = self.__dao.cursor.fetchone()
@@ -64,6 +57,4 @@ class UsuarioController:
         except Exception as e:
             print(e)
             raise Exception("Se Falló en la busqueda del Usuario en la Base de Datos")
-        finally:
-            self.__dao.desconectar()
             

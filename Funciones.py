@@ -289,7 +289,7 @@ class Funciones:
         
     def listarEmpleados(self, e:bool = False, asignaciones:bool = False):   
         try:
-            empleado_controller = self.__empleado_controller
+            empleado_controller = EmpleadoController()
             empleados = empleado_controller.listarEmpleados()
             console = self.console
             if not empleados:
@@ -474,7 +474,7 @@ class Funciones:
             
     def listarSucursales(self, e:bool = False):
         try:
-            sucursal_controller = self.__sucursal_controller
+            sucursal_controller = SucursalController()
             datosSucursal = sucursal_controller.listarSucursales()
             if not datosSucursal:
                 print(Fore.RED + "¡No se encontraron sucursales registradas!")
@@ -621,13 +621,13 @@ class Funciones:
                               
     
     def modificarSucursal(self):
+        sucursal_controller = self.__sucursal_controller
+        console = self.console80
+        system("cls")
+        redirigir("Mostrando Sucursales disponibles para Modificar...")
+        self.listarSucursales(True) 
+        console.rule(title="[cyan]MODIFICAR SUCURSAL", style="bold yellow")
         while True:
-            sucursal_controller = self.__sucursal_controller
-            console = self.console80
-            system("cls")
-            redirigir("Mostrando Sucursales disponibles para Modificar...")
-            self.listarSucursales(True) 
-            console.rule(title="[cyan]MODIFICAR SUCURSAL", style="bold yellow")
 
             try:
                 s_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
@@ -640,7 +640,7 @@ class Funciones:
                         redirigir("Volviendo a menu Gestión Sucursales...")
                         self.__gestionSucursales()
                 
-                    redirigir("Volviendo a opcion Eliminar Sucursal...")
+                    # redirigir("Volviendo a opcion Eliminar Sucursal...")
                     continue
             except:
                 print(Fore.RED + "El ID ingresado no es válido.")
@@ -705,7 +705,7 @@ class Funciones:
         
     def listarAsignaciones(self):
         try:
-            asignaciones_controller = self.__asignaciones_controller
+            asignaciones_controller = AsignacionesController()
             console = self.console
             datosAsignaciones = asignaciones_controller.listarAsignaciones()
             if not datosAsignaciones:
