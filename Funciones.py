@@ -103,7 +103,7 @@ class Funciones:
                     
                     redirigir("Volviendo a opcion Registrar...")
                     
-            except Exception as e:
+            except:
                 redirigir("Volviendo Menu Principal...")
                 return self.menuPrincipal()
                 
@@ -341,7 +341,7 @@ class Funciones:
                 empleado = empleado_controller.buscarEmpleadoPorRut(rut)
 
                 if not empleado:
-                    console.print("[bold red]¡Empleado no existe!, [bold white]Ingreselo uno válido.")     
+                    console.print("[bold red]¡Empleado no existe!, Ingreselo uno válido.")     
                     if not reintentar():
                         redirigir("Volviendo a menu Gestión Empleados...")
                         return self.__gestionEmpleados()
@@ -410,7 +410,8 @@ class Funciones:
                         return self.__gestionEmpleados()
                     else:
                         print(MENSAJES["error"])
-        except:
+        except Exception as e:
+            print(e)
             redirigir("Volviendo a menu Gestión Empleados...")
             return self.__gestionEmpleados()
                   
@@ -512,11 +513,11 @@ class Funciones:
         empleados_controller = self.__empleado_controller
         sucursal_controller = self.__sucursal_controller
         console = self.console80
+        system("cls")
+        redirigir("Mostrando Sucursales disponibles para Eliminar...")
+        self.listarSucursales(True)
+        console.rule(title="[cyan]ELIMINAR SUCURSAL", style="bold yellow")
         while True:
-            system("cls")
-            redirigir("Mostrando Sucursales disponibles para Eliminar...")
-            self.listarSucursales(True)
-            console.rule(title="[cyan]ELIMINAR SUCURSAL", style="bold yellow")
             try:
                 s_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
                 if s_id:
@@ -526,9 +527,8 @@ class Funciones:
                     console.print("[bold red]¡Sucursal no Existe!, Ingrese un ID de Sucursal valido.")
                     if not reintentar():
                         redirigir("Volviendo a menu Gestión Sucursales...")
-                        self.__gestionSucursales()
+                        return self.__gestionSucursales()
                     
-                    redirigir("Volviendo a opcion Eliminar Sucursal...")
                     continue
             except:
                 print(Fore.RED + "El ID ingresado no es válido.")
@@ -759,38 +759,46 @@ class Funciones:
                 
                 while True:
                     try:
-                        s_id = int(console.input("[cyan]Ingrese ID de Sucursal Nueva: "))
+                        s_id = int(console.input("[bold cyan]Ingrese ID de Sucursal Nueva: "))
                         if s_id:
                             s_idEnDB = sucursal_controller.buscarSucursalID(s_id)
                             if s_idEnDB:
                                 break
-                            console.print("[bold red]¡Sucursal no existe!, [bold white]Ingrese un ID de sucursal valido.")
+                            console.print("[bold red]¡Sucursal no existe!, Ingrese un ID de sucursal valido.")
                             if not reintentar():
                                 redirigir("Volviendo a menu Gestión Asignaciones")
                                 return self.gestionAsignaciones()
                     except:
                         print(Fore.RED + "¡ID de Sucursal es necesaria!, Ingresela nuevamente.")
-                        
-
-                asignaciones_controller.reasignarEmpleado(rut, s_id, empleado)
+                
+                
+                try:
+                    asignaciones_controller.reasignarEmpleado(rut, s_id, empleado)
+                    
+                except Exception as e:
+                    print(e)
+                    if not reintentar():
+                        redirigir("Volviendo a menu Gestion Asignaciones")
+                        return self.gestionAsignaciones()
+                    continue
+                
                 print(Fore.GREEN + "¡Reasignacion Exitosa!")
                 while True:
                     confirmacion = console.input("[bold white]¿Desea reasignar a otro Empleado? [bold yellow](S/N): ").strip().upper()
                     if confirmacion == 'S':
                         redirigir("Volviendo a opcion Reasignar Empleado...")
-                        return self.reasignarEmpleado()
+                        break
                     elif confirmacion == "N":
                         redirigir("Volviendo a menu Gestión Asignaciones...")
-                        return self.__gestionEmpleados()
+                        return self.gestionAsignaciones()
                     else:
                         print(MENSAJES["error"])
+                        
+                continue
         except Exception as e:
-            print(e)
-            if not reintentar():
-                redirigir("Volviendo a menu Gestion Asignaciones")
-                return self.gestionAsignaciones()
-            return self.reasignarEmpleado()
-                   
+            
+            redirigir("Volviendo a menu Gestion Asignaciones")
+            return self.gestionAsignaciones()
         
     def salirPrograma(self):
         console = self.console

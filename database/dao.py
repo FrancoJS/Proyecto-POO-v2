@@ -3,9 +3,9 @@ import pymysql
 class DAO:
     
     def __init__(self):
-        self.__conectar()
+        self.conectar()
      
-    def __conectar(self):
+    def conectar(self):
         try:
             self.connection = pymysql.connect(
                 host = "localhost",
