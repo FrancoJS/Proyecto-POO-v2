@@ -1,71 +1,67 @@
 from datetime import datetime
-import re
-from colorama import Fore
 from rich.console import Console
-from utils.mensajes_templates import reintentar
+from utils.mensajes_templates import show_confirmation
 
 
-class DatosEmpleado: 
+class EmpleoyeeData: 
     
     def __init__(self) -> None:
         self.console = Console()
     
-    def obtenerDatosEmpleado(self):
-        experiencia = self.__obtenerExperiencia()
-        inicio_contrato = self.__obtenerFechaContrato()
-        salario = self.__obtenerSalario()
-        return experiencia, inicio_contrato, salario
+    def get_data(self):
+        experience = self.get_experience(self.console)
+        hire_date = self.get_hire_date(self.console)
+        salary = self.get_salary(self.console)
+        return experience, hire_date, salary
     
-    
-    def __obtenerExperiencia(self, error:bool = False) -> int:
-        console = self.console
+    @staticmethod
+    def get_experience(console, error:bool = False) -> int:
         while True:
             if error:
-                if not reintentar():
-                    raise Exception
+                if not show_confirmation():
+                    raise Exception("Cancelado por el usuario.")
                 
             try:
-                experiencia = int(console.input("[bold cyan]Experiencia (en años): "))
-                if experiencia < 0 or experiencia > 50:
-                    print(Fore.RED + "La experiencia debe ser un valor entre 0 y 50 años.")
+                experience = int(console.input("[bold cyan]Experiencia (en años): "))
+                if experience < 0 or experience > 50:
+                    console.print("[bold red]La experiencia debe ser un valor entre 0 y 50 años.")
                     error = True
                     continue
-                return experiencia
+                
+                return experience
             except ValueError:
-                print(Fore.RED + "Debe ingresar un número válido para la experiencia.")
+                console.print("[bold red]Debe ingresar un número válido para la experiencia.")
                 error = True
     
-    
-    def __obtenerFechaContrato(self, error:bool = False) -> str:
-        console = self.console
+    @staticmethod
+    def get_hire_date(console, error:bool = False) -> str:
         while True:
             if error:
-                if not reintentar():
-                    raise Exception
+                if not show_confirmation():
+                    raise Exception("Cancelado por el usuario.")
                 
-            fecha_contrato = console.input("[bold cyan]Fecha inicio contrato (YYYY-MM-DD): ").strip()
+            hire_date = console.input("[bold cyan]Fecha inicio contrato (YYYY-MM-DD): ").strip()
             try:
-                datetime.strptime(fecha_contrato, "%Y-%m-%d")
-                return fecha_contrato
+                datetime.strptime(hire_date, "%Y-%m-%d")
+                return hire_date
             except ValueError:
-                print(Fore.RED + "Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
+                console.print("[bold red]Debe ingresar una fecha válida en el formato YYYY-MM-DD.")
                 error = True
     
-    
-    def __obtenerSalario(self, error:bool = False) -> int:
-        console = self.console
+    @staticmethod
+    def get_salary(console, error:bool = False) -> int:
         while True:
             if error:
-                if not reintentar():
-                    raise Exception
+                if not show_confirmation():
+                    raise Exception("Cancelado por el usuario.")
                 
             try:
-                salario = int(console.input("[bold cyan]Salario (clp): $"))
-                if salario < 500000 or salario > 300000000:
-                    print(Fore.RED + "Debe ingresar un salario valido entre $500.000 y $30.000.000")
+                salary = int(console.input("[bold cyan]Salario (clp): $"))
+                if salary < 500000 or salary > 300000000:
+                    console.print("[bold red]Debe ingresar un salario valido entre $500.000 y $30.000.000")
                     error = True
                     continue
-                return salario
+                return salary
             except ValueError:
-                print(Fore.RED + "Debe ingresar un número válido para el salario.")
+                console.print("[bold red]Debe ingresar un número válido para el salario.")
                 error = True

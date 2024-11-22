@@ -1,4 +1,4 @@
-from models.Empleado import Empleado
+from models.Employee_model import Empleado
 from database.dao import DAO
 from datetime import date
 from colorama import Fore, Style, init

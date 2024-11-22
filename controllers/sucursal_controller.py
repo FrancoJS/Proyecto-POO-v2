@@ -1,5 +1,5 @@
 from database.dao import DAO
-from models.Sucursal import Sucursal
+from models.Sucursal_model import Sucursal
 from colorama import Fore
 from os import system
 
@@ -22,7 +22,7 @@ class SucursalController:
             raise Exception("Ocurrio un error al crear la sucursal, intente nuevamente")
             
             
-    def listarSucursales(self):
+    def list_sucursals(self):
         try:
             sql = "SELECT * FROM SUCURSALES where es_id = 1"
             self.__dao.cursor.execute(sql)
@@ -32,7 +32,7 @@ class SucursalController:
             print("Ocurrió un error al buscar los datos")
     
     
-    def buscarSucursalID(self, s_id:int):
+    def get_sucursal_id(self, s_id:int):
         try:
             sql = "SELECT S_ID FROM SUCURSALES WHERE s_id = %s and es_id = 1"
             values = (s_id)
