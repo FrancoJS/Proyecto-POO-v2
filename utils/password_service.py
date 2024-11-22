@@ -1,18 +1,17 @@
-from colorama import Fore
-from utils.mensajes_templates import reintentar
+from utils.messages_templates import reintentar
 import re
 import bcrypt
 from rich.prompt import Prompt
 
 
-def hashPassword(password):
+def hash_password(password) -> str:
     salt = bcrypt.gensalt()
     hashedPassword = bcrypt.hashpw(password.encode("utf-8"), salt)
     return hashedPassword.decode("utf-8")   
 
 
-def comparePassword(password, hashedPassword):
-    return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))
+def compare_password(password, hashed_password) -> bool:
+    return bcrypt.checkpw(password.encode("utf-8"), hashed_password.encode("utf-8"))
 
 
 def get_password(console, error: bool = False, login: bool = False) -> str:
@@ -25,7 +24,7 @@ def get_password(console, error: bool = False, login: bool = False) -> str:
             clave = Prompt.ask("[bold cyan]Clave", password=True).strip()
             
             if len(clave) < 8 or len(clave) > 20:
-                print(Fore.RED + "La clave debe tener entre 8 y 20 caracteres.")
+                console.print("[bold red]La clave debe tener entre 8 y 20 caracteres.")
                 error = True
                 continue
             
@@ -33,7 +32,7 @@ def get_password(console, error: bool = False, login: bool = False) -> str:
                 confirmacion = Prompt.ask("[bold cyan]Confirmar clave", password=True).strip()
 
                 if clave != confirmacion:
-                    print(Fore.RED + "Las claves no coinciden. Por favor, inténtelo de nuevo.")
+                    console.print("[bold red]Las claves no coinciden. Por favor, inténtelo de nuevo.")
                     error = True
                     continue
 

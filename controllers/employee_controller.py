@@ -1,11 +1,10 @@
-from models.Employee_model import Empleado
+from models.Employee_model import Employee
 from database.dao import DAO
 from datetime import date
 from colorama import Fore, Style, init
-from .sucursal_controller import SucursalController
 init(autoreset=True)
 
-class EmpleadoController:
+class EmployeeController:
     
     def __init__(self):
         self.__dao = DAO()
@@ -15,25 +14,25 @@ class EmpleadoController:
         try:
             empleadoEnDB = self.buscarEmpleado(rut, telefono, correo)
             if empleadoEnDB:
-                raise Exception(Fore.RED + "¡Empleado ya se encuentra registrado con Rut, Telefono o Correo!")
+                raise Exception("¡Empleado ya se encuentra registrado con Rut, Telefono o Correo!")
 
             empleado = Empleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
             sql = "INSERT INTO EMPLEADOS (RUT, NOMBRES, APE_PATERNO, APE_MATERNO, TELEFONO, CORREO, EXPERIENCIA, INICIO_CON, SALARIO, S_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (empleado.rut, empleado.nombres, empleado.ape_paterno, empleado.ape_materno, empleado.telefono, empleado.correo, empleado.experiencia, empleado.inicio_contrato, empleado.salario, empleado.s_id)
             self.__dao.cursor.execute(sql, values)
             self.__dao.connection.commit()
-        except Exception as e:
-            raise Exception(e)
+        except Exception as error:
+            raise Exception(error)
         
 
-    def listarEmpleados(self):
+    def list_employees(self):
         try:
             sql = "SELECT * FROM EMPLEADOS where es_id = 1"
             self.__dao.cursor.execute(sql)
             result = self.__dao.cursor.fetchall()
             return result
-        except:  
-            print(Fore.RED + "Ocurrió un error al buscar los datos")
+        except:
+            raise Exception("Ocurrio un error al listar los empleados")  
         
             
     def buscarEmpleado(self, rut:str, telefono:int, correo:str):

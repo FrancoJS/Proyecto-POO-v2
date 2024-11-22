@@ -13,16 +13,16 @@ def redirect(mensaje):
     with console.status(f"[bold yellow]{mensaje}", spinner="dots"):
         time.sleep(1.2)
     
-# def reintentar(): 
-#     while True:
-#         opcion = console.input("[bold white]¿Desea intentar denuevo? [bold yellow](S/N): ").strip().upper()
-#         if opcion == "S":
-#             return True
-#         elif opcion == "N":
-#             return False
-#         else:
-#             print(MESSAGES["error"])
-#             system("pause")
+def reintentar(): 
+    while True:
+        opcion = console.input("[bold white]¿Desea intentar denuevo? [bold yellow](S/N): ").strip().upper()
+        if opcion == "S":
+            return True
+        elif opcion == "N":
+            return False
+        else:
+            print(MESSAGES["error"])
+            system("pause")
 
 def show_confirmation(message: str = "¿Desea intentar denuevo?") -> bool:
     # Muestra un mensaje de confirmación y devuelve True si la respuesta es "S", False si es "N".

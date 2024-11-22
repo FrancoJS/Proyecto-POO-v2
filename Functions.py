@@ -1,38 +1,38 @@
 from controllers.sucursal_controller import SucursalController
-from controllers.empleado_controller import EmpleadoController
-from controllers.usuario_controller import UsuarioController
-from controllers.asignaciones_controller import AsignacionesController
+from controllers.employee_controller import EmployeeController
+from controllers.user_controller import UserController
+from controllers.assignments_controller import AsignacionesController
 from utils.get_data_person import PersonData
-from utils.obtener_datos_sucursal import DatosSucursal
-from utils.obtener_datos_empleado import DatosEmpleado
-from utils.mensajes_templates import MESSAGES, redirect, reintentar, show_confirmation, get_perfil_id, pause
+from utils.get_data_sucursal import SucursalData
+from utils.get_data_employee import EmpleoyeeData
+from utils.messages_templates import MESSAGES, redirect, reintentar, show_confirmation, get_perfil_id, pause
 from utils.get_data_api import obtenerBecasAPI
 from utils.password_service import get_password
 from colorama import Fore,init
 init(autoreset=True)
 from os import system
 import os
-from getpass import getpass
+
 
 from rich.console import Console
 from rich.table import Table
 from rich import box
-from rich.prompt import Prompt
 
 
-class Funciones:
+
+class Functions:
     
     console = Console()
     console80 = Console(width=80)
     
     def __init__(self):
-        self.__empleado_controller = EmpleadoController()
-        self.user_controller = UsuarioController()
+        self.__employee_controller = EmployeeController()
+        self.__user_controller = UserController()
         self.__sucursal_controller = SucursalController()
         self.__asignaciones_controller = AsignacionesController()
         self.__person_data = PersonData()
-        self.__employee_data = DatosEmpleado()
-        self.__datos_sucursal = DatosSucursal()
+        self.__employee_data = EmpleoyeeData()
+        self.__sucursal_data = SucursalData()
     
     
     def main_menu(self):
@@ -69,7 +69,7 @@ class Funciones:
                 system("cls")
                 console = self.console80
                 console.rule("[cyan]REGISTRO DE USUARIO", style="bold yellow")
-                rut, nombres, ape_paterno, ape_materno, telefono, correo = self.__person_data.get_data()
+                rut, names, paternal_surname, maternal_surname, phone_number, email = self.__person_data.get_data()
                 password = get_password(console)
                 
                 perfil_id = get_perfil_id()
@@ -79,7 +79,7 @@ class Funciones:
                     return self.main_menu()
                 
                 try:
-                    self.user_controller.register_user(rut, nombres, ape_paterno, ape_materno, telefono, correo, password, perfil_id)
+                    self.__user_controller.register_user(rut, names, paternal_surname, maternal_surname, phone_number, email, password, perfil_id)
                     console.print("[bold green]¡Usuario registrado Exitosamente!")
                     self._perfil_id = perfil_id
                     
@@ -98,7 +98,9 @@ class Funciones:
                     
                     redirect("Volviendo a opcion Registrar...")
                     
-            except:
+            except Exception as error:
+                console.print(f"[bold red]{error}")
+                pause()
                 redirect("Volviendo Menu Principal...")
                 return self.main_menu()
             
@@ -106,16 +108,17 @@ class Funciones:
     def login(self):
         try:
             system("cls")
-            self.console80.rule("[cyan]INICIO DE SESIÓN", style="bold yellow")
-            rut = self.__person_data.get_rut()
-            password = get_password(self.console80, login=True)
+            console = self.console80
+            console.rule("[cyan]INICIO DE SESION", style="bold yellow")
+            rut = self.__person_data.get_rut(console)
+            password = get_password(console, login=True)
             
-            perfil_id = self.user_controller.validate_credentials(rut, password)
+            perfil_id = self.__user_controller.validate_credentials(rut, password)
             if not perfil_id:
                 raise Exception("¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
             
             self._perfil_id = perfil_id
-            self.console80.print("[bold green]¡Inicio de Sesión Exitoso!")
+            console.print("[bold green]¡Inicio de Sesión Exitoso!")
             
             if self._perfil_id == 1:
                 redirect("Redirigiendo a Menu De Administrador...")
@@ -125,8 +128,8 @@ class Funciones:
                 return self.menu_supervisor()
             
         except Exception as error:
-            self.console80.print(f"[bold red]{error}")
-            self.console80.input("Presione una tecla para continuar...")
+            console.print(f"[bold red]{error}")
+            pause()
             redirect("Volviendo a Menu Principal...")
             return self.main_menu()
         
@@ -192,7 +195,7 @@ class Funciones:
 
                 option = int(console.input("[bold white]Digite una opción: "))
                 if option == 1:
-                    return self.listarEmpleados()
+                    return self.list_employees()
                 elif option == 2:
                     return self.list_sucursals()
                 elif option == 3:
@@ -225,7 +228,7 @@ class Funciones:
                if option == 1:
                    return self.add_employee()
                elif option == 2:
-                   return self.listarEmpleados()
+                   return self.list_employees()
                elif option == 3:
                    return self.modificarEmpleado()
                elif option == 4:
@@ -240,92 +243,90 @@ class Funciones:
             
 
     def add_employee(self):
-        try:
-            console = self.console80
-            sucursal_data = self.__sucursal_controller.list_sucursals()
-            if not sucursal_data:
-                console.print("[bold red]¡No existen sucursales creadas, porfavor agregue una sucursal primero para poder agregar un Empleado!")
-                pause()   
-                return self.employee_menu()
-            
-            system("cls")
-            console.rule(title="[cyan]CREAR EMPLEADO", style="bold yellow")
-            rut, names, paternal_surname, maternal_surname, phone_number, email = self.__person_data.get_data()
-            experience, hire_date, salary = self.__employee_data.get_data()
-            
-            redirect("Mostrando Sucursales disponibles para Asignar...")
-            self.list_sucursals(True)
-            sucursal_id = self.__datos_sucursal.get_sucursal_id(self.__sucursal_controller)
-            
-            self.__empleado_controller.add_employee(rut, names, paternal_surname, maternal_surname, phone_number, email, experience, hire_date, salary, sucursal_id)
-            console.print("[bold green]¡Empleado creado exitosamente!")
-            
-            confirmacion = show_confirmation("¿Desea agregar otro Empleado?")
+        while True:
+            try:
+                console = self.console80
+                sucursal_data = self.__sucursal_controller.list_sucursals()
+                if not sucursal_data:
+                    console.print("[bold red]¡No existen sucursales creadas, porfavor agregue una sucursal primero para poder agregar un Empleado!")
+                    pause()   
+                    return self.employee_menu()
 
-            if not confirmacion:
+                system("cls")
+                console.rule(title="[cyan]CREAR EMPLEADO", style="bold yellow")
+                rut, names, paternal_surname, maternal_surname, phone_number, email = self.__person_data.get_data()
+                experience, hire_date, salary = self.__employee_data.get_data()
+
+                redirect("Mostrando Sucursales disponibles para Asignar...")
+                self.list_sucursals(True)
+                sucursal_id = self.__sucursal_data.get_sucursal_id(self.__sucursal_controller)
+
+                self.__employee_controller.add_employee(rut, names, paternal_surname, maternal_surname, phone_number, email, experience, hire_date, salary, sucursal_id)
+                console.print("[bold green]¡Empleado creado exitosamente!")
+
+                if not show_confirmation("¿Desea agregar otro Empleado?"):
+                    redirect("Volviendo a menu Gestión Empleados...")
+                    return self.employee_menu()
+
+                redirect("Volviendo a opcion Crear Empleado...")
+        
+            except Exception as error:
+                console.print(f"[bold red]{error}")
                 redirect("Volviendo a menu Gestión Empleados...")
                 return self.employee_menu()
-            else:
-                redirect("Volviendo a opcion Crear Empleado...")
-                return self.crearEmpleado()
-
-        except Exception as error:
-            console.print(f"[bold red]{error}")
-            redirect("Volviendo a menu Gestión Empleados...")
-            return self.employee_menu()
             
         
-    def listarEmpleados(self, e:bool = False, asignaciones:bool = False):   
+    def list_employees(self, no_redirect:bool = False, from_assignments:bool = False):   
         try:
-            empleado_controller = EmpleadoController()
-            empleados = empleado_controller.listarEmpleados()
             console = self.console
-            if not empleados:
-                print(Fore.RED + "¡No se encontraron empleados registrados!")
-                system("pause")
-                if asignaciones:
+            employees = EmployeeController().list_employees()
+            if not employees:
+                console.print("[bold red]¡No se encontraron empleados registrados!")
+                pause()
+                if from_assignments:
                     redirect("Volviendo a menu Gestion Asignaciones...")
                     return self.gestionAsignaciones()
                 
                 if self._perfil_id == 1:
                     return self.employee_menu()
-                else:
+                elif self._perfil_id == 2:
                     return self.menu_supervisor()
                 
             system("cls")
             table = Table(title="[cyan]EMPLEADOS REGISTRADOS[/cyan]", style="bold yellow")
-            columnas = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO(clp)", "ID SUCURSAL"]
-            for columna in columnas:
-                table.add_column("[bold cyan]" + columna + "[bold cyan]", style="bold white", justify="center")
+            columns = ["ID","RUT", "NOMBRES", "APE_PATERNO", "APE_MATERNO", "TELEFONO", "CORREO", "EXPERIENCIA", "INICIO CONTRATO", "SALARIO(clp)", "ID SUCURSAL"]
+            for column in columns:
+                table.add_column("[bold cyan]" + column + "[bold cyan]", style="bold white", justify="center")
                 
-            for empleado in empleados:
-                table.add_row(str(empleado[0]), empleado[1], empleado[2], empleado[3], empleado[4], "+56 " + str(empleado[5]), empleado[6], str(empleado[7]) + " años", empleado[8].strftime("%Y-%m-%d"), "$" + str(empleado[9]), str(empleado[10]))
+            for employee in employees:
+                table.add_row(str(employee[0]), employee[1], employee[2], employee[3], employee[4], "+56 " + str(employee[5]), employee[6], str(employee[7]) + " años", employee[8].strftime("%Y-%m-%d"), "$" + str(employee[9]), str(employee[10]))
                 table.add_row("")
                                 
             console.print(table)
-            volver = console.input("[bold white]Presione una tecla para continuar...")
+            pause()
 
-            if not e:
+            if not no_redirect:
                 if self._perfil_id == 1:
                     redirect("Volviendo a Menu Gestion Empleados...")
                     return self.employee_menu()
-                else:
+                elif self._perfil_id == 2:
                     redirect("Volviendo a Menu de Supervisor...")
                     return self.menu_supervisor()
-        except Exception as e:
-            print(e)
+                
+        except Exception as error:
+            console.print(f"[bold red]{error}")
 
-
+    #Quede hasta aca refacorizando
     def eliminarEmpleado(self):
         try:
-            empleado_controller = self.__empleado_controller
             console = self.console80
+            empleado_controller = self.__employee_controller
             while True:
                 system("cls")
                 redirect("Mostrando Empleados disponibles para Eliminar...")
-                self.listarEmpleados(True)
+                self.list_employees(True)
                 console.rule(title="[cyan]ELIMINAR EMPLEADO", style="bold yellow")
-                rut = self.__person_data.get_rut()
+                rut = self.__person_data.get_rut(console)
                 empleado = empleado_controller.buscarEmpleadoPorRut(rut)
 
                 if not empleado:
@@ -358,12 +359,12 @@ class Funciones:
 
     def modificarEmpleado(self):
         try:
-            empleado_controller = self.__empleado_controller
+            empleado_controller = self.__employee_controller
             console = self.console80
             while True:
                 system("cls")
                 redirect("Mostrando Empleados disponibles para Modificar...")
-                self.listarEmpleados(True)
+                self.list_employees(True)
                 console.rule("[cyan]MODIFICAR EMPLEADO", style="bold yellow")
                 try:
                     e_id = int(console.input("[bold cyan]Ingrese ID de Empleado: "))
@@ -445,7 +446,7 @@ class Funciones:
             sucursal_controller = self.__sucursal_controller
             system("cls")
             console.rule(title="[cyan]CREAR SUCURSAL", style="bold yellow")
-            nombre, direccion, fecha_constitucion = self.__datos_sucursal.obtenerDatosSucursal()
+            nombre, direccion, fecha_constitucion = self.__sucursal_data.obtenerDatosSucursal()
             id_sucursal = sucursal_controller.crearSucursal(nombre,direccion,fecha_constitucion)
             print(Fore.GREEN + f"¡Sucursal creada Exitosamente con ID: {id_sucursal}!")
             opcion = console.input("[bold white]¿Desea agregar otra sucursal? [bold yellow](S/N) ").strip().upper()
@@ -498,7 +499,7 @@ class Funciones:
             
             
     def eliminarSucursal(self):
-        empleados_controller = self.__empleado_controller
+        empleados_controller = self.__employee_controller
         sucursal_controller = self.__sucursal_controller
         console = self.console80
         system("cls")
@@ -639,7 +640,7 @@ class Funciones:
                 
         try:
             print(Fore.GREEN + f"Sucursal con ID {s_id} seleccionada!")
-            nombre, direccion, fecha_constitucion = self.__datos_sucursal.obtenerDatosSucursal()
+            nombre, direccion, fecha_constitucion = self.__sucursal_data.obtenerDatosSucursal()
             sucursal_controller.modificarSucursal(s_id, nombre, direccion, fecha_constitucion)
             print(Fore.GREEN + "¡Sucursal modificada exitosamente!")
             while True:
@@ -723,16 +724,16 @@ class Funciones:
     def reasignarEmpleado(self):
         try:
             while True:
-                empleado_controller = self.__empleado_controller
+                empleado_controller = self.__employee_controller
                 sucursal_controller = self.__sucursal_controller
                 asignaciones_controller = self.__asignaciones_controller
                 system("cls")
                 redirect("Mostrando Empleados disponibles para Reasignación...")
-                self.listarEmpleados(True, asignaciones=True)
+                self.list_employees(True, from_assignments=True)
                 console = self.console80
                 console.rule(title="[cyan]REASIGNAR EMPLEADO", style="bold yellow")
                 console.print("[bold white]Ingrese RUT de Empleado y Sucursal a la que desea reasignar")
-                rut = self.__person_data.get_rut()
+                rut = self.__person_data.get_rut(console)
                 empleado = empleado_controller.buscarEmpleadoPorRut(rut)
 
                 if not empleado:

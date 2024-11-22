@@ -1,6 +1,6 @@
 from database.dao import DAO
 from colorama import Fore
-from .empleado_controller import EmpleadoController
+from .employee_controller import EmployeeController
 
 class AsignacionesController:
     
