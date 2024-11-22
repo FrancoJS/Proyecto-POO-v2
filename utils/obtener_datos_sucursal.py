@@ -70,7 +70,7 @@ class DatosSucursal:
                 error = True
 
 
-    def obtenerIdSucursal(self, sucursal_cotroller):
+    def get_sucursal_id(self, sucursal_cotroller):
             console = self.console
             while True:
                 try:

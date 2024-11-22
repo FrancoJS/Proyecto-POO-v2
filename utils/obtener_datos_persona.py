@@ -29,7 +29,7 @@ class DatosPersona:
         while True:
             if error:
                 if not reintentar():
-                    raise Exception
+                    raise Exception("Cancelado por el usuario.")
                 
             console.print("[bold white]Si el digito verificador de su rut es [bold yellow]'K'[/bold yellow] reemplacelo con 0")
             rut = console.input("[bold cyan]Rut: ").strip()

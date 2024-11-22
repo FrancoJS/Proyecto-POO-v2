@@ -11,7 +11,7 @@ class EmpleadoController:
         self.__dao = DAO()
 
 
-    def crearEmpleado(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, experiencia:int, inicio_contrato:date, salario:int, s_id:int):
+    def add_employee(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, experiencia:int, inicio_contrato:date, salario:int, s_id:int):
         try:
             empleadoEnDB = self.buscarEmpleado(rut, telefono, correo)
             if empleadoEnDB:

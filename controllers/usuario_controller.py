@@ -8,7 +8,7 @@ class UsuarioController:
         self.__dao = DAO()
     
     
-    def registroUsuarios(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, clave:str, p_id:int):
+    def register_user(self, rut:str, nombres:str, ape_paterno:str, ape_materno:str, telefono:int, correo:str, clave:str, p_id:int):
         try:
             if self.__usuarioExiste(rut, telefono, correo):
                 raise Exception(f"¡Ya existe un Usuario con Rut, Telefono o Correo proporcionados!")
@@ -39,7 +39,7 @@ class UsuarioController:
             raise Exception(f"Error al verificar el usuario")
 
         
-    def validarCredenciales(self, rut:str, clave:str) -> bool:
+    def validate_credentials(self, rut:str, clave:str) -> bool:
         try:
             sql = "SELECT rut, clave, p_id FROM USUARIOS WHERE rut = %s"
             self.__dao.cursor.execute(sql, (rut,))

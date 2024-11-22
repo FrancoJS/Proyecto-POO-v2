@@ -15,12 +15,12 @@ def comparePassword(password, hashedPassword):
     return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))
 
 
-def obtenerClave(console, error: bool = False, inicioSesion: bool = False) -> str:
+def get_password(console, error: bool = False, login: bool = False) -> str:
         console = console
         while True:
             if error:
                 if not reintentar():
-                    raise Exception
+                    raise Exception("Cancelado por el usuario.")
 
             clave = Prompt.ask("[bold cyan]Clave", password=True).strip()
             
@@ -29,7 +29,7 @@ def obtenerClave(console, error: bool = False, inicioSesion: bool = False) -> st
                 error = True
                 continue
             
-            if not inicioSesion:
+            if not login:
                 confirmacion = Prompt.ask("[bold cyan]Confirmar clave", password=True).strip()
 
                 if clave != confirmacion:
