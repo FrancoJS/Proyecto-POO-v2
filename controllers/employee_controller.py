@@ -16,7 +16,7 @@ class EmployeeController:
             if empleadoEnDB:
                 raise Exception("¡Empleado ya se encuentra registrado con Rut, Telefono o Correo!")
 
-            empleado = Empleado(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
+            empleado = Employee(rut, nombres, ape_paterno, ape_materno, telefono, correo, experiencia, inicio_contrato, salario, s_id)
             sql = "INSERT INTO EMPLEADOS (RUT, NOMBRES, APE_PATERNO, APE_MATERNO, TELEFONO, CORREO, EXPERIENCIA, INICIO_CON, SALARIO, S_ID) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             values = (empleado.rut, empleado.nombres, empleado.ape_paterno, empleado.ape_materno, empleado.telefono, empleado.correo, empleado.experiencia, empleado.inicio_contrato, empleado.salario, empleado.s_id)
             self.__dao.cursor.execute(sql, values)
@@ -68,17 +68,17 @@ class EmployeeController:
             print("Error al buscar empleado")
             
             
-    def buscarEmpleadoPorRut(self, rut:str):
+    def employee_exists_by_rut(self, rut:str):
         try:
-            sql = "SELECT RUT, S_ID FROM EMPLEADOS WHERE rut = %s and es_id = 1"
+            sql = "SELECT RUT FROM EMPLEADOS WHERE rut = %s and es_id = 1"
             self.__dao.cursor.execute(sql, (rut))
             empleado = self.__dao.cursor.fetchone()
-            return empleado
+            return True if empleado else False
         except:
-            print("Error al buscar empleado")
+            raise Exception("Error al buscar empleado")
 
 
-    def eliminarEmpleado(self, rut:str):
+    def delete_employee(self, rut:str):
         try:
             sql = "UPDATE EMPLEADOS SET es_id = 2 WHERE rut = %s" #%s = dato dinamico   
             self.__dao.cursor.execute(sql, (rut))
@@ -100,7 +100,7 @@ class EmployeeController:
             raise Exception(e)
     
     
-    def modificarEmpleado(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
+    def modify_employee(self, e_id: int, rut: str, nombres: str, ape_paterno: str, ape_materno: str,
                           telefono: int, correo: str, experiencia: int, inicio_con, salario:int):
         try:
             empleado = self.buscarEmpleadoModificar(rut, telefono, correo, e_id)

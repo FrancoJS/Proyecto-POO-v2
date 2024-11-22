@@ -11,9 +11,9 @@ class SucursalData:
     
     def get_data(self):
         name = self.get_name(self.console)
-        adress = self.__obtenerDireccion(self.console)
-        constitution_date = self.__obtenerFechaConstitucion(self.console)
-        return name, adress, constitution_date
+        address = self.get_address(self.console)
+        constitution_date = self.get_constitution_date(self.console)
+        return name, address, constitution_date
     
     @staticmethod
     def get_name(console, error:bool = False) -> str:
@@ -68,18 +68,18 @@ class SucursalData:
 
     
     def get_sucursal_id(self, sucursal_controller):
-            console = self.console
-            while True:
-                try:
-                    sucursal_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
-                    if not sucursal_controller.get_sucursal_id(sucursal_id):
-                        raise Exception
-                    
-                    return sucursal_id
-                except ValueError:
-                    console.print("[bold red]¡El ID debe ser un número entero!.")
-                except:
-                    console.print("[bold red]¡Sucursal no existe!, Ingrese un ID válido.")
-                    if not show_confirmation():
-                            raise Exception("Cancelado por el usuario.")
+        console = self.console
+        while True:
+            try:
+                sucursal_id = int(console.input("[bold cyan]Ingrese ID de Sucursal: "))
+                if not sucursal_controller.get_sucursal_id(sucursal_id):
+                    raise Exception("¡Sucursal no existe!, Ingrese un ID válido.")
+                
+                return sucursal_id
+            except ValueError:
+                console.print("[bold red]¡El ID debe ser un número entero!.")
+            except Exception as error:
+                console.print(f"[bold red]{error}")
+                if not show_confirmation():
+                        raise Exception("Cancelado por el usuario.")
                     

@@ -37,19 +37,34 @@ def show_confirmation(message: str = "¿Desea intentar denuevo?") -> bool:
         else:
             print(MESSAGES["error"])
             
-def get_perfil_id(self):
+def get_perfil_id():
         while True:
             try:
-                perfil_id = int(self.console80.input("[bold cyan]Ingrese tipo de usuario (1. Administrador || 2. Supervisor): "))
+                perfil_id = int(console.input("[bold cyan]Ingrese tipo de usuario (1. Administrador || 2. Supervisor): "))
                 if perfil_id in (1, 2):
                     return perfil_id
-                else:
-                    raise Exception            
+                
+                raise Exception            
             except:
-                MESSAGES["error"]
+                print(MESSAGES["error"])
                 if not show_confirmation():
-                    redirect("Volviendo a Menu Principal...")
-                    return False
+                    raise Exception("Cancelado por el usuario.")
     
+    
+def get_employee_id(employee_controller):
+    while True:
+        try:
+            employee_id = int(console.input("[bold cyan]Ingrese ID de Empleado: "))
+            if not employee_controller.verificarE_ID(employee_id):
+               raise Exception("El ID ingresado no es válido.")
+               
+            return employee_id
+        except ValueError:
+            console.print("[bold red]El ID debe ser un número entero.")
+        except Exception as error:
+            console.print(f"[bold red]{error}")
+            if not show_confirmation():
+                raise Exception("Cancelado por el usuario.")
+            
 def pause():
     input("Presione una tecla para continuar...")
