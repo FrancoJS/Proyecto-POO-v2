@@ -45,11 +45,14 @@ class UserController:
             self.__dao.cursor.execute(sql, (rut,))
             user = self.__dao.cursor.fetchone()
             if not user:
-                return False
+                raise Exception("¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
                
             password_in_db = user[1]
-            return user[2] if compare_password(password, password_in_db) else False
+            if compare_password(password, password_in_db):
+                return user[2]
+            
+            raise Exception("¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
                 
-        except:
-            raise Exception("Se Falló en la busqueda del Usuario en la Base de Datos")
+        except Exception as error:
+            raise Exception(error)
             

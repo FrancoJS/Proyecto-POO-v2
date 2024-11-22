@@ -18,7 +18,7 @@ from rich.console import Console
 from rich.table import Table
 from rich import box
 
-
+# Crear exepciones para mejor flujo de trabajo
 
 class Functions:
     
@@ -73,6 +73,7 @@ class Functions:
                 password = get_password(console)
                 perfil_id = get_perfil_id()
                 
+                #TO DO Lanzar una excepcion personalizada desde el controlador, para mejorar flujo de trabajo
                 self.__user_controller.register_user(rut, names, paternal_surname, maternal_surname, phone_number, email, password, perfil_id)
                 console.print("[bold green]¡Usuario registrado Exitosamente!")
                 self._perfil_id = perfil_id
@@ -97,26 +98,18 @@ class Functions:
             try:
                 system("cls")
                 console.rule("[cyan]INICIO DE SESION", style="bold yellow")
-                rut = self.__person_data.get_rut(console)
+                rut = self.__person_data.get_rut()
                 password = get_password(console, login=True)
 
                 perfil_id = self.__user_controller.validate_credentials(rut, password)
-                if not perfil_id:
-                    console.print("[bold red]¡Usuario no se encuentra registrado o la contraseña es incorrecta!")
-                    if not show_confirmation():
-                        redirect("Volviendo Menu Principal...")
-                        return self.main_menu()
-
-                    redirect("Volviendo a opcion Iniciar Sesión...")
-                    continue
-
+                
                 self._perfil_id = perfil_id
                 console.print("[bold green]¡Inicio de Sesión Exitoso!")
 
-                if self._perfil_id == 1:
+                if perfil_id == 1:
                     redirect("Redirigiendo a Menu De Administrador...")
                     return self.admin_menu()
-                elif self._perfil_id == 2:
+                elif perfil_id == 2:
                     redirect("Redirigiendo a Menu De Supervisor...")
                     return self.supervisor_menu()
 
@@ -273,8 +266,8 @@ class Functions:
     def list_employees(self, no_redirect:bool = False, from_assignments:bool = False):   
         try:
             console = self.console
-            employees = EmployeeController().list_employees()
-            if not employees:
+            employees_data = EmployeeController().list_employees()
+            if not employees_data:
                 console.print("[bold red]¡No se encontraron empleados registrados!")
                 pause()
                 if from_assignments:
@@ -292,7 +285,7 @@ class Functions:
             for column in columns:
                 table.add_column("[bold cyan]" + column + "[bold cyan]", style="bold white", justify="center")
                 
-            for employee in employees:
+            for employee in employees_data:
                 table.add_row(str(employee[0]), employee[1], employee[2], employee[3], employee[4], "+56 " + str(employee[5]), employee[6], str(employee[7]) + " años", employee[8].strftime("%Y-%m-%d"), "$" + str(employee[9]), str(employee[10]))
                 table.add_row("")
                                 
@@ -762,6 +755,7 @@ class Functions:
             
             redirect("Volviendo a menu Gestion Asignaciones")
             return self.gestionAsignaciones()
+        
         
     def salirPrograma(self):
         console = self.console

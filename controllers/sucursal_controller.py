@@ -25,8 +25,8 @@ class SucursalController:
         try:
             sql = "SELECT * FROM SUCURSALES where es_id = 1"
             self.__dao.cursor.execute(sql)
-            response = self.__dao.cursor.fetchall()
-            return response
+            sucursals = self.__dao.cursor.fetchall()
+            return sucursals
         except:
             print("Ocurrió un error al buscar los datos")
     
