@@ -42,18 +42,15 @@ class Funciones:
             table = Table(title="[cyan]MENU PRINCIPAL", style="bold yellow", box=box.ROUNDED)
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
-            table.add_row("1", "Registrar Usuario")
-            table.add_row("2", "Iniciar Sesión")
-            table.add_row("3", "Salir")
+            table.add_row("1", "Iniciar Sesión")
+            table.add_row("2", "Salir")
             console.print(table)
 
             opcion:int = int(console.input("[bold white]Digite una opción: [/bold white]"))
         
             if opcion == 1:
-                return self.registroUsuarios()
-            elif opcion == 2:
                 return self.iniciarSesion()
-            elif opcion == 3:
+            elif opcion == 2:
                 return self.salirPrograma()
             else:
                 raise Exception 
@@ -83,18 +80,15 @@ class Funciones:
                         MENSAJES["error"]
                         if not reintentar():
                             redirigir("Volviendo a Menu Principal...")
-                            self.menuPrincipal()
+                            self.menuMesaAyudaAdmin()
                 try:
                     usuario_controller.registroUsuarios(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, p_id)
                     console.print("[bold green]¡Usuario registrado Exitosamente!")
-                    self.__perfilID = p_id
+                    if not mostrarConfirmacion("¿Desea registrar otro usuario?"):
+                        redirigir("Volviendo a Menu Administrador...")
                     
-                    if self.__perfilID == 1:
-                        redirigir("Redirigiendo a Menu De Administrador...")
-                        return self.menuMesaAyudaAdmin()
-                    elif self.__perfilID == 2:
-                        redirigir("Redirigiendo a Menu De Supervisor...")
-                        return self.menuMesaAyudaSupervisor()
+                    redirigir("Volviendo a opcion Registrar...")
+                    
                 except Exception as e:
                     console.print(f"[bold red]{e}")
                     if not reintentar():
@@ -156,23 +150,26 @@ class Funciones:
             table = Table(title="[cyan]BIENVENIDO AL MENU DE ADMINISTRADOR", style="bold yellow", box=box.ROUNDED)
             table.add_column("[cyan]Opción[cyan]", style="bold white", justify="center")
             table.add_column("[cyan]Descripción[cyan]", style="bold white", )
-            table.add_row("1", "Gestión de Empleados")
-            table.add_row("2", "Gestión de Sucursales")
-            table.add_row("3", "Gestión de Asignaciones")
-            table.add_row("4", "Recuperar datos JSON")
-            table.add_row("5", "Cerrar Sesión")
+            table.add_row("1", "Registrar Usuario")
+            table.add_row("2", "Gestión de Empleados")
+            table.add_row("3", "Gestión de Sucursales")
+            table.add_row("4", "Gestión de Asignaciones")
+            table.add_row("5", "Recuperar datos JSON")
+            table.add_row("6", "Cerrar Sesión")
             console.print(table)
             opcion = int(console.input("[bold white]Digite una opción: "))
 
             if opcion == 1:
-                return self.__gestionEmpleados()
+                return self.registroUsuarios()
             elif opcion == 2:
-                return self.__gestionSucursales()
+                return self.__gestionEmpleados()
             elif opcion == 3:
-                return self.gestionAsignaciones()
+                return self.__gestionSucursales()
             elif opcion == 4:
-                return self.listarBecasAPI()
+                return self.gestionAsignaciones()
             elif opcion == 5:
+                return self.listarBecasAPI()
+            elif opcion == 6:
                 return self.cerrarSesion()
             else:
                 print(MENSAJES["error"])
