@@ -614,10 +614,9 @@ class Funciones:
                 table.add_row("")
                 
             console.print(table)
-            volver = console.input("[bold white]Presione una tecla para continuar...")
+            console.input("[bold white]Presione una tecla para continuar...")
         except Exception as e:
             print(e)
-            print("Que pedo")
                               
     
     def modificarSucursal(self):
