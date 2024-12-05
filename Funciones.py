@@ -77,29 +77,30 @@ class Funciones:
                         else:
                             raise Exception            
                     except Exception as e:
-                        MENSAJES["error"]
+                        console.print(MENSAJES["error"])
                         if not reintentar():
-                            redirigir("Volviendo a Menu Principal...")
+                            redirigir("Volviendo a Menu Administrador...")
                             self.menuMesaAyudaAdmin()
                 try:
                     usuario_controller.registroUsuarios(rut, nombres, ape_paterno, ape_materno, telefono, correo, clave, p_id)
                     console.print("[bold green]¡Usuario registrado Exitosamente!")
                     if not mostrarConfirmacion("¿Desea registrar otro usuario?"):
                         redirigir("Volviendo a Menu Administrador...")
+                        return self.menuMesaAyudaAdmin()
                     
-                    redirigir("Volviendo a opcion Registrar...")
+                    redirigir("Volviendo a opcion Registrar Usuario...")
                     
                 except Exception as e:
                     console.print(f"[bold red]{e}")
                     if not reintentar():
-                        redirigir("Volviendo Menu Principal...")
-                        return self.menuPrincipal()
+                        redirigir("Volviendo Menu Administrador...")
+                        return self.menuMesaAyudaAdmin()
                     
-                    redirigir("Volviendo a opcion Registrar...")
+                    redirigir("Volviendo a opcion Registrar Usuario...")
                     
             except:
-                redirigir("Volviendo Menu Principal...")
-                return self.menuPrincipal()
+                redirigir("Volviendo Menu Administrador...")
+                return self.menuMesaAyudaAdmin()
                 
     
     def iniciarSesion(self):
@@ -456,7 +457,7 @@ class Funciones:
             console.rule(title="[cyan]CREAR SUCURSAL", style="bold yellow")
             nombre, direccion, fecha_constitucion = self.__datos_sucursal.obtenerDatosSucursal()
             id_sucursal = sucursal_controller.crearSucursal(nombre,direccion,fecha_constitucion)
-            print(Fore.GREEN + f"¡Sucursal creada Exitosamente con ID: {id_sucursal}!")
+            print(Fore.GREEN + f"¡Sucursal creada Exitosamente!")
             opcion = console.input("[bold white]¿Desea agregar otra sucursal? [bold yellow](S/N) ").strip().upper()
             if opcion == 'S':
                 redirigir("Volviendo a opcion Crear Sucursal...")
